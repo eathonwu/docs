@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>clickhosue on My New Hugo Site</title>
+    <link>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/</link>
+    <description>Recent content in clickhosue on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language><atom:link href="http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/sql-join/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/sql-join/</guid>
+      <description>clickhouse
+常用操作
+join # 所有的join 操作基本范式都是
+​	table1 join table2 on table.xxx=table2.xxx
+​	join table3 on table1.xxx=table3.xxx
+​	join table4 on table2.xxx=table4.xxx
+不允许先查询 再进行join,错误查询示例
+select * from table_a where age=12 (inner) join table_b on table_a.id =table_b.id left joni table_c on table a.id=table_c.id where table_a.name=&amp;#39;xxxx&amp;#34; (innser)join操作 # ​	内连接,去两个表on 交集
+select * from table_a (inner) join table_b on table_a.id =table_b.id where table_a.name=&amp;#39;&amp;#39;xxxx&amp;#34; ​
+Left join # 左边为空时,会导致不会查到任何数据
+左连接,取左表所有
+select * from table_a left join table_b on table_a.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/%E6%95%B0%E6%8D%AE%E6%9F%A5%E8%AF%A2%E8%B0%83%E4%BC%98/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/%E6%95%B0%E6%8D%AE%E6%9F%A5%E8%AF%A2%E8%B0%83%E4%BC%98/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/%E7%89%A9%E5%8C%96%E8%A7%86%E5%9B%BE/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/%E7%89%A9%E5%8C%96%E8%A7%86%E5%9B%BE/</guid>
+      <description>物化视图相关功能</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/%E8%BF%90%E7%BB%B4%E7%9B%B8%E5%85%B3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/%E8%BF%90%E7%BB%B4%E7%9B%B8%E5%85%B3/</guid>
+      <description>system.clusters表 # 作用: 查询系统的集群信息
+system.query_log # 系统日志:
+system.parts # 系统表:根据此表可以查询表的分区信息,以及占用的空间大小
+SELECT TABLE, -- 表名 DATABASE, -- 数据库名 max(partition) AS part, -- 最大分区 formatReadableSize(sum(bytes_on_disk)) AS SIZE, -- 磁盘容量 sum(bytes_on_disk) AS size_bytes -- 磁盘容量 FROM system.parts_all GROUP BY TABLE, DATABASE ORDER BY size_bytes DESC system.disks # 查询磁盘使用率
+SELECT sum(total_space -free_space)/sum(total_space) AS USAGE, -- 使用率 count(*) , -- 节点数量 formatReadableSize(sum(total_space -free_space)) AS foramat_usage, -- 使用空间大小 formatReadableSize(sum(total_space)) AS format_total --总空间大小 FROM clusterAllReplicas(&amp;#39;clickhouse_pcg_video_data_science_2_replica&amp;#39;,system,disks); 数据导出命令 # mysql -h{host} -u{user}-P{port} -D{db} --password=&amp;#39;{passwod}&amp;#39; -e &amp;#34;sql&amp;#34; &amp;gt; file.</description>
+    </item>
+    
+  </channel>
+</rss>

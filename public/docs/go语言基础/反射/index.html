@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="1 反射使用 # 1.1 反射获取数据类型 # 通过relfect.TypeOf() 获取对应的类型,这个方法可以返回类型元数据信息,
+Name方法返回类型对应的名字,如果是slice类型或者是指针类型,返回为空字符串 Kind方法对应的数据类型,int、string、struct、func,枚举值reflect.Kind类型 Size: 数据占用内存大小,单位字节 &hellip; type Type interface { ... Name() string // 返回类型对应的名字 PkgPath() string // 类型所在路径 Kind() Kind // 类型元数据的所属类型,int32、float32、string、slice、map、struct、ptr... Elem() Type // 数组、切片、chan、map、指针类型存储的数据信息,其他类型会panic Field(i int) StructField // 返回sturct的某个字段元数据信息 ... } type Foo struct { Name string `tag1:&#34;First Tag&#34; tag2:&#34;Second Tag&#34;` Age int `json:&#34;age&#34;` } func main() { testCase := []interface{}{ 1, &#34;1&#34;, []string{&#34;1&#34;, &#34;2&#34;}, map[int]int{1: 1, 2: 2}, Foo{ Name: &#34;foo&#34;, Age: 12, }, ioutil.">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="" />
+<meta property="og:description" content="1 反射使用 # 1.1 反射获取数据类型 # 通过relfect.TypeOf() 获取对应的类型,这个方法可以返回类型元数据信息,
+Name方法返回类型对应的名字,如果是slice类型或者是指针类型,返回为空字符串 Kind方法对应的数据类型,int、string、struct、func,枚举值reflect.Kind类型 Size: 数据占用内存大小,单位字节 &hellip; type Type interface { ... Name() string // 返回类型对应的名字 PkgPath() string // 类型所在路径 Kind() Kind // 类型元数据的所属类型,int32、float32、string、slice、map、struct、ptr... Elem() Type // 数组、切片、chan、map、指针类型存储的数据信息,其他类型会panic Field(i int) StructField // 返回sturct的某个字段元数据信息 ... } type Foo struct { Name string `tag1:&#34;First Tag&#34; tag2:&#34;Second Tag&#34;` Age int `json:&#34;age&#34;` } func main() { testCase := []interface{}{ 1, &#34;1&#34;, []string{&#34;1&#34;, &#34;2&#34;}, map[int]int{1: 1, 2: 2}, Foo{ Name: &#34;foo&#34;, Age: 12, }, ioutil." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/%E5%8F%8D%E5%B0%84/" /><meta property="article:section" content="docs" />
+
+
+<title>反射 | My New Hugo Site</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/book.min.c58292d36b18b675680ab9baea2029204537b839ea72f258746ec0f32ce8d6c8.css" integrity="sha256-xYKS02sYtnVoCrm66iApIEU3uDnqcvJYdG7A8yzo1sg=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.8c4912e29523d66f8911a6d25dda355256e4831cf98a61759b785a7fd112b722.js" integrity="sha256-jEkS4pUj1m&#43;JEabSXdo1Ulbkgxz5imF1m3haf9EStyI=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>My New Hugo Site</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>go语言基础</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/gmp%E6%A8%A1%E5%9E%8B/" class="">Gmp模型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/%E5%8F%8D%E5%B0%84/" class="active">反射</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>java基础</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/jvm/" class="">Jvm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/lambda/" class="">Lambda</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="">线程池</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/%E9%9B%86%E5%90%88/" class="">集合</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>数据库</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>elasticsearch</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/elasticsearch/%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87/" class="">数据分片</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/elasticsearch/%E8%B0%83%E4%BC%98/" class="">调优</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/" class="">clickhosue</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/sql-join/" class="">SQL Join</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/%E7%89%A9%E5%8C%96%E8%A7%86%E5%9B%BE/" class="">物化视图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/%E8%BF%90%E7%BB%B4%E7%9B%B8%E5%85%B3/" class="">运维相关</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>mysql</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/mvcc%E6%A8%A1%E5%9E%8B/" class="">Mvcc模型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E4%BA%8B%E5%8A%A1/" class="">事务</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>redis</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E6%9E%B6%E6%9E%84/" class="">架构</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>算法</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="">动态规划</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E7%AE%97%E6%B3%95/%E5%9B%9E%E6%BA%AF/" class="">回溯</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E7%AE%97%E6%B3%95/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="">贪心算法</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>架构</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%9E%B6%E6%9E%84/%E5%BE%AE%E4%BF%A1%E6%9E%B6%E6%9E%84/" class="">微信架构</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>反射</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-反射使用">1 反射使用</a>
+      <ul>
+        <li><a href="#11-反射获取数据类型">1.1 反射获取数据类型</a></li>
+        <li><a href="#12-反射获取对应的值">1.2 反射获取对应的值</a></li>
+        <li><a href="#13-反射修改值">1.3 反射修改值</a></li>
+        <li><a href="#14-反射make">1.4 反射make</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-反射优缺点">2 反射优缺点</a></li>
+    <li><a href="#3-原理走读">3 原理走读</a>
+      <ul>
+        <li><a href="#31-类型元数据">3.1 类型元数据</a></li>
+        <li><a href="#32-接口">3.2 接口</a></li>
+        <li><a href="#33-类型断言">3.3 类型断言</a></li>
+        <li><a href="#34-接口与反射">3.4 接口与反射</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-反射性能">4 反射性能</a></li>
+    <li><a href="#5-反射应用">5 反射应用</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h2 id="1-反射使用">
+  1 反射使用
+  <a class="anchor" href="#1-%e5%8f%8d%e5%b0%84%e4%bd%bf%e7%94%a8">#</a>
+</h2>
+<h3 id="11-反射获取数据类型">
+  1.1 反射获取数据类型
+  <a class="anchor" href="#11-%e5%8f%8d%e5%b0%84%e8%8e%b7%e5%8f%96%e6%95%b0%e6%8d%ae%e7%b1%bb%e5%9e%8b">#</a>
+</h3>
+<p>通过relfect.TypeOf() 获取对应的类型,这个方法可以返回类型元数据信息,</p>
+<ul>
+<li>Name方法返回类型对应的名字,如果是slice类型或者是指针类型,返回为空字符串</li>
+<li>Kind方法对应的数据类型,int、string、struct、func,枚举值reflect.Kind类型</li>
+<li>Size: 数据占用内存大小,单位字节</li>
+<li>&hellip;</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Type</span> <span style="color:#66d9ef">interface</span> {
+</span></span><span style="display:flex;"><span> 		<span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">Name</span>() <span style="color:#66d9ef">string</span>   <span style="color:#75715e">// 返回类型对应的名字
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">PkgPath</span>() <span style="color:#66d9ef">string</span>    <span style="color:#75715e">// 类型所在路径
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">Kind</span>() <span style="color:#a6e22e">Kind</span> <span style="color:#75715e">// 类型元数据的所属类型,int32、float32、string、slice、map、struct、ptr...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">Elem</span>() <span style="color:#a6e22e">Type</span>   <span style="color:#75715e">// 数组、切片、chan、map、指针类型存储的数据信息,其他类型会panic
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">Field</span>(<span style="color:#a6e22e">i</span> <span style="color:#66d9ef">int</span>) <span style="color:#a6e22e">StructField</span> <span style="color:#75715e">// 返回sturct的某个字段元数据信息
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Foo</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Name</span> <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`tag1:&#34;First Tag&#34; tag2:&#34;Second Tag&#34;`</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Age</span>  <span style="color:#66d9ef">int</span>    <span style="color:#e6db74">`json:&#34;age&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">testCase</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">interface</span>{}{
+</span></span><span style="display:flex;"><span>		<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#34;1&#34;</span>, []<span style="color:#66d9ef">string</span>{<span style="color:#e6db74">&#34;1&#34;</span>, <span style="color:#e6db74">&#34;2&#34;</span>}, <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1</span>: <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>: <span style="color:#ae81ff">2</span>}, <span style="color:#a6e22e">Foo</span>{
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">Name</span>: <span style="color:#e6db74">&#34;foo&#34;</span>,
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">Age</span>:  <span style="color:#ae81ff">12</span>,
+</span></span><span style="display:flex;"><span>		}, <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">ReadAll</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Foo</span>{},
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">testCase</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">callReflect</span>(<span style="color:#a6e22e">v</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">callReflect</span>(<span style="color:#a6e22e">i</span> <span style="color:#66d9ef">interface</span>{}) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">of</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">TypeOf</span>(<span style="color:#a6e22e">i</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Kind</span>() <span style="color:#f92672">!=</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">Struct</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;name: &#34;</span>, <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Name</span>(), <span style="color:#e6db74">&#34;kind:&#34;</span>, <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Kind</span>(), <span style="color:#e6db74">&#34;size:&#34;</span>, <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Size</span>())
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;name: &#34;</span>, <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Name</span>(), <span style="color:#e6db74">&#34;kind:&#34;</span>, <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Kind</span>(), <span style="color:#e6db74">&#34;size:&#34;</span>, <span style="color:#e6db74">&#34;tag:&#34;</span>, <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Size</span>(), <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Field</span>(<span style="color:#ae81ff">0</span>).<span style="color:#a6e22e">Tag</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">输出</span>:
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">name</span>:  <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">kind</span>: <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">size</span>: <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">name</span>:  <span style="color:#66d9ef">string</span> <span style="color:#a6e22e">kind</span>: <span style="color:#66d9ef">string</span> <span style="color:#a6e22e">size</span>: <span style="color:#ae81ff">16</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">name</span>:   <span style="color:#a6e22e">kind</span>: <span style="color:#a6e22e">slice</span> <span style="color:#a6e22e">size</span>: <span style="color:#ae81ff">24</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">name</span>:   <span style="color:#a6e22e">kind</span>: <span style="color:#66d9ef">map</span> <span style="color:#a6e22e">size</span>: <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">name</span>:  <span style="color:#a6e22e">Foo</span> <span style="color:#a6e22e">kind</span>: <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">size</span>: <span style="color:#a6e22e">tag0</span>: <span style="color:#ae81ff">24</span> <span style="color:#a6e22e">tag1</span>:<span style="color:#e6db74">&#34;First Tag&#34;</span> <span style="color:#a6e22e">tag2</span>:<span style="color:#e6db74">&#34;Second Tag&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">name</span>:   <span style="color:#a6e22e">kind</span>: <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">size</span>: <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">name</span>:   <span style="color:#a6e22e">kind</span>: <span style="color:#a6e22e">ptr</span> <span style="color:#a6e22e">size</span>: <span style="color:#ae81ff">8</span>
+</span></span></code></pre></div><h3 id="12-反射获取对应的值">
+  1.2 反射获取对应的值
+  <a class="anchor" href="#12-%e5%8f%8d%e5%b0%84%e8%8e%b7%e5%8f%96%e5%af%b9%e5%ba%94%e7%9a%84%e5%80%bc">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">testCase</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">interface</span>{}{<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#34;1&#34;</span>, []<span style="color:#66d9ef">string</span>{<span style="color:#e6db74">&#34;1&#34;</span>, <span style="color:#e6db74">&#34;2&#34;</span>}, <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">1</span>: <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>: <span style="color:#ae81ff">2</span>}, <span style="color:#a6e22e">Foo</span>{<span style="color:#a6e22e">Name</span>: <span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#a6e22e">Age</span>: <span style="color:#ae81ff">12</span>}, <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">ReadAll</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Foo</span>{}}
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">testCase</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">callReflect</span>(<span style="color:#a6e22e">v</span>)
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">callReflect</span>(<span style="color:#a6e22e">i</span> <span style="color:#66d9ef">interface</span>{}) {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">of</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">ValueOf</span>(<span style="color:#a6e22e">i</span>) <span style="color:#75715e">// reflect.ValueOf获取对应的数据值,先判断数据的Kind,然后在进行取值,否则会panic
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">kind</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Kind</span>()
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">kind</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">Int</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Int</span>())
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">String</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">String</span>())
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">Slice</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Len</span>(); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Print</span>(<span style="color:#e6db74">&#34;slice :&#34;</span>, <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Index</span>(<span style="color:#a6e22e">i</span>).<span style="color:#a6e22e">String</span>(), <span style="color:#e6db74">&#34;\t&#34;</span>)
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>()
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">Map</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">MapKeys</span>() {
+</span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Print</span>(<span style="color:#e6db74">&#34;map,key:&#34;</span>, <span style="color:#a6e22e">v</span>.<span style="color:#a6e22e">Int</span>(), <span style="color:#e6db74">&#34;value:&#34;</span>, <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">MapIndex</span>(<span style="color:#a6e22e">v</span>).<span style="color:#a6e22e">Int</span>(), <span style="color:#e6db74">&#34;\t&#34;</span>)
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>()
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">Struct</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;struct ,Name %s,age:%d\n&#34;</span>, <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Field</span>(<span style="color:#ae81ff">0</span>).<span style="color:#a6e22e">String</span>(), <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Field</span>(<span style="color:#ae81ff">1</span>).<span style="color:#a6e22e">Int</span>())
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">输出</span>:
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">slice</span> :<span style="color:#ae81ff">1</span>        <span style="color:#a6e22e">slice</span> :<span style="color:#ae81ff">2</span>        
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">map</span>,<span style="color:#a6e22e">key</span>:<span style="color:#ae81ff">1</span><span style="color:#a6e22e">value</span>:<span style="color:#ae81ff">1</span>        <span style="color:#66d9ef">map</span>,<span style="color:#a6e22e">key</span>:<span style="color:#ae81ff">2</span><span style="color:#a6e22e">value</span>:<span style="color:#ae81ff">2</span>        
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> ,<span style="color:#a6e22e">Name</span> <span style="color:#a6e22e">foo</span>,<span style="color:#a6e22e">age</span>:<span style="color:#ae81ff">12</span>
+</span></span></code></pre></div><h3 id="13-反射修改值">
+  1.3 反射修改值
+  <a class="anchor" href="#13-%e5%8f%8d%e5%b0%84%e4%bf%ae%e6%94%b9%e5%80%bc">#</a>
+</h3>
+<p>通过reflect.ValueOf() 中传递指针可以对通过反射修改对应的数据,首先调用Elem方法,然后调用set方法进行修改,reflect的中的各种方法大多数误操作都会导致程序panic,所以在进行操作时</p>
+<p>私有变量的值不能进行修改,可以通过unsafe.Pointer进行修改</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Foo</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">Name</span> <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`tag1:&#34;First Tag&#34; tag2:&#34;Second Tag&#34;`</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">Age</span>  <span style="color:#66d9ef">int</span>    <span style="color:#e6db74">`json:&#34;age&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">Foo</span>{<span style="color:#a6e22e">Name</span>: <span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#a6e22e">Age</span>: <span style="color:#ae81ff">12</span>}
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">callReflect</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">f</span>)
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;reflct value:%v&#34;</span>, <span style="color:#a6e22e">f</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">callReflect</span>(<span style="color:#a6e22e">i</span> <span style="color:#66d9ef">interface</span>{}) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">TypeOf</span>(<span style="color:#a6e22e">i</span>).<span style="color:#a6e22e">Kind</span>() <span style="color:#f92672">!=</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">Ptr</span> { <span style="color:#75715e">// 检测是否为指针,非指针拒绝修改
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		panic(<span style="color:#e6db74">&#34;not ptr,cannot modify&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">of</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">ValueOf</span>(<span style="color:#a6e22e">i</span>).<span style="color:#a6e22e">Elem</span>()                               <span style="color:#75715e">// Elem 取地址实际指向的值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Kind</span>() <span style="color:#f92672">==</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">Struct</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Type</span>().<span style="color:#a6e22e">Name</span>() <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;Foo&#34;</span> { <span style="color:#75715e">// 判断类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Field</span>(<span style="color:#ae81ff">1</span>); <span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">CanSet</span>() { <span style="color:#75715e">//判断是否可以修改
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">SetInt</span>(<span style="color:#ae81ff">100</span>) <span style="color:#75715e">// 进行修改
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Field</span>(<span style="color:#ae81ff">0</span>); <span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">CanSet</span>() {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">SetString</span>(<span style="color:#e6db74">&#34;reflect&#34;</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">输出</span>:
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">reflct</span> <span style="color:#a6e22e">value</span>:{<span style="color:#a6e22e">reflect</span> <span style="color:#ae81ff">100</span>}
+</span></span></code></pre></div><h3 id="14-反射make">
+  1.4 反射make
+  <a class="anchor" href="#14-%e5%8f%8d%e5%b0%84make">#</a>
+</h3>
+<p>可以通过反射创建数据,输入参数relcet.Type类型,输出为reflect.Value类型</p>
+<ul>
+<li>slice通过reflect.MakeSlice 创建,reflect.Append添加对应的元素</li>
+<li>map通过内置的reflect.MakeMap创建</li>
+<li>function通过reflect.MakeFunc创建</li>
+<li>chan创建通过reflect.MakeChan</li>
+<li>创建一个新的struct 通过reflect.StructOf函数创建,这种方式比较奇怪,应为新定义的struct 没有对应的名字,如果需要修改对应的struct 实例值,需要通过反射就行修改</li>
+</ul>
+<h2 id="2-反射优缺点">
+  2 反射优缺点
+  <a class="anchor" href="#2-%e5%8f%8d%e5%b0%84%e4%bc%98%e7%bc%ba%e7%82%b9">#</a>
+</h2>
+<p>反射的优点</p>
+<ol>
+<li>通用性，可对类库和框架代码做极大的简化设计</li>
+<li>灵活性，运行期动态获取数据的类型</li>
+</ol>
+<p>反射的缺点:</p>
+<ol>
+<li>同样因为反射的概念和语法都比较抽象，滥用反射会使得代码难以被其他人读懂无法在编译时检查错误。</li>
+<li>作为一种强类型的语言，go 的编译器会在编译阶段检查出类型错误，但是 interface 定义的类型是不明确的，代码在运行时存在 panic 的风险</li>
+<li>降低了代码运行的效率，反射变量的类型需要额外的开销, 参考第4节</li>
+</ol>
+<h2 id="3-原理走读">
+  3 原理走读
+  <a class="anchor" href="#3-%e5%8e%9f%e7%90%86%e8%b5%b0%e8%af%bb">#</a>
+</h2>
+<h3 id="31-类型元数据">
+  3.1 类型元数据
+  <a class="anchor" href="#31-%e7%b1%bb%e5%9e%8b%e5%85%83%e6%95%b0%e6%8d%ae">#</a>
+</h3>
+<p>类型名称、类型大小、对齐边界、是否自定义等，是每个类型元数据都要记录的信息，所以被放到了runtime.<em>type中，作为每个类型元数据的header</em></p>
+<p>reflect.TypeOf 返回的type接口,对应*reflect.rtype类型, 和runtime._type完全一致</p>
+<p>![image-20220825110648993](/Users/wuguangkuo/Library/Application Support/typora-user-images/image-20220825110648993.png)</p>
+<p>_type 结构:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">_type</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">size</span>       <span style="color:#66d9ef">uintptr</span> <span style="color:#75715e">// 类型大小
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">ptrdata</span>    <span style="color:#66d9ef">uintptr</span> <span style="color:#75715e">// size of memory prefix holding all pointers
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">hash</span>       <span style="color:#66d9ef">uint32</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">tflag</span>      <span style="color:#a6e22e">tflag</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">align</span>      <span style="color:#66d9ef">uint8</span>  <span style="color:#75715e">// 对齐边界
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">fieldAlign</span> <span style="color:#66d9ef">uint8</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">kind</span>       <span style="color:#66d9ef">uint8</span> <span style="color:#75715e">// 类型的种类
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#75715e">// function for comparing objects of this type
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#75715e">// (ptr to object A, ptr to object B) -&gt; ==?
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">equal</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">unsafe</span>.<span style="color:#a6e22e">Pointer</span>, <span style="color:#a6e22e">unsafe</span>.<span style="color:#a6e22e">Pointer</span>) <span style="color:#66d9ef">bool</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// gcdata stores the GC type data for the garbage collector.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#75715e">// If the KindGCProg bit is set in kind, gcdata is a GC program.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#75715e">// Otherwise it is a ptrmask bitmap. See mbitmap.go for details.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">gcdata</span>    <span style="color:#f92672">*</span><span style="color:#66d9ef">byte</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">str</span>       <span style="color:#a6e22e">nameOff</span> <span style="color:#75715e">// 类型名称字符串
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">ptrToThis</span> <span style="color:#a6e22e">typeOff</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>slice type:</p>
+<pre tabindex="0"><code class="language-go " data-lang="go ">type slicetype struct {
+   typ  _type // slice 类型
+   elem *_type // slice里的元数据类型
+}
+</code></pre><p>map type:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">maptype</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">typ</span>    <span style="color:#a6e22e">_type</span>  
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">key</span>    <span style="color:#f92672">*</span><span style="color:#a6e22e">_type</span> <span style="color:#75715e">// key类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">elem</span>   <span style="color:#f92672">*</span><span style="color:#a6e22e">_type</span> <span style="color:#75715e">// value类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">bucket</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">_type</span> <span style="color:#75715e">// internal type representing a hash bucket
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#75715e">// function for hashing keys (ptr to key, seed) -&gt; hash
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">hasher</span>     <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">unsafe</span>.<span style="color:#a6e22e">Pointer</span>, <span style="color:#66d9ef">uintptr</span>) <span style="color:#66d9ef">uintptr</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">keysize</span>    <span style="color:#66d9ef">uint8</span>  <span style="color:#75715e">// size of key slot
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">elemsize</span>   <span style="color:#66d9ef">uint8</span>  <span style="color:#75715e">// size of elem slot
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">bucketsize</span> <span style="color:#66d9ef">uint16</span> <span style="color:#75715e">// size of bucket
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">flags</span>      <span style="color:#66d9ef">uint32</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>stuct type:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">structtype</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">typ</span>     <span style="color:#a6e22e">_type</span> <span style="color:#75715e">// 类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">pkgPath</span> <span style="color:#a6e22e">name</span>  <span style="color:#75715e">// 包路径
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">fields</span>  []<span style="color:#a6e22e">structfield</span>  <span style="color:#75715e">// 字段
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">structfield</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">name</span>       <span style="color:#a6e22e">name</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">typ</span>        <span style="color:#f92672">*</span><span style="color:#a6e22e">_type</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">offsetAnon</span> <span style="color:#66d9ef">uintptr</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>interface type:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">interfacetype</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">typ</span>     <span style="color:#a6e22e">_type</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">pkgpath</span> <span style="color:#a6e22e">name</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">mhdr</span>    []<span style="color:#a6e22e">imethod</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="32-接口">
+  3.2 接口
+  <a class="anchor" href="#32-%e6%8e%a5%e5%8f%a3">#</a>
+</h3>
+<p>接口类型的数据在运行中将会转变成以下两种类型</p>
+<h4 id="321-空接口">
+  3.2.1 空接口
+  <a class="anchor" href="#321-%e7%a9%ba%e6%8e%a5%e5%8f%a3">#</a>
+</h4>
+<p>runtime.eface</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">eface</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">_type</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">_type</span>  <span style="color:#75715e">//动态类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">data</span>  <span style="color:#a6e22e">unsafe</span>.<span style="color:#a6e22e">Pointer</span> <span style="color:#75715e">// 接口动态值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><h4 id="322-非空接口">
+  3.2.2 非空接口
+  <a class="anchor" href="#322-%e9%9d%9e%e7%a9%ba%e6%8e%a5%e5%8f%a3">#</a>
+</h4>
+<p>runtime.iface</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// iface 结构
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">iface</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">tab</span>  <span style="color:#f92672">*</span><span style="color:#a6e22e">itab</span>    <span style="color:#75715e">// itab结构体
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">data</span> <span style="color:#a6e22e">unsafe</span>.<span style="color:#a6e22e">Pointer</span> <span style="color:#75715e">//动态值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// itab 结构体
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">itab</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">inter</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">interfacetype</span> <span style="color:#75715e">//接口类型,定义接口实现的方法
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">_type</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">_type</span> <span style="color:#75715e">// 动态类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">hash</span>  <span style="color:#66d9ef">uint32</span> <span style="color:#75715e">// copy of _type.hash. Used for type switches.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">_</span>     [<span style="color:#ae81ff">4</span>]<span style="color:#66d9ef">byte</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fun</span>   [<span style="color:#ae81ff">1</span>]<span style="color:#66d9ef">uintptr</span> <span style="color:#75715e">// 动态类型实现的接口方法拷贝,系统会维持一份itab缓存,fun[0]==0 表示未实现对应的接口,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>类型别名与类型重定义</p>
+<p>type rune=int32  同一种类型元数据</p>
+<p>type type2  []slice  不同的类型元数据</p>
+<p>type any = interface{}  // go version1.18</p>
+<h3 id="33-类型断言">
+  3.3 类型断言
+  <a class="anchor" href="#33-%e7%b1%bb%e5%9e%8b%e6%96%ad%e8%a8%80">#</a>
+</h3>
+<p>int、string、 slice、map 、空接口、非空接口</p>
+<p>空接口.(具体类型)</p>
+<p>![image-20220825112856067](/Users/wuguangkuo/Library/Application Support/typora-user-images/image-20220825112856067.png)</p>
+<p>只需要根据空接口的type 和被断言类型进行一次比较即可</p>
+<p>非空接口.(具体类型)</p>
+<p>![image-20220825113126766](/Users/wuguangkuo/Library/Application Support/typora-user-images/image-20220825113126766.png)</p>
+<ul>
+<li>
+<p>非空接口运行时结构为itab,和data类型,需要判断接口的动态类型*os.File是否实现了io.ReadWriter接口类型,只需要遍历动态类型实现的方法,如果对应的方法实现了io.ReadWriter接口,则类型断言成功.</p>
+</li>
+<li>
+<p>接口类型和对应的动态类型确定下来,对应的itab接口就不会在进行变更,所以go内部会维持一个itab缓存,用于加快比较操作,用接口的hash^动态类型的hash,如果在itab缓存中则代表动态类型实现了接口</p>
+<pre tabindex="0"><code class="language-go " data-lang="go ">type itabTableType struct {
+	size    uintptr             // length of entries array. Always a power of 2.
+	count   uintptr             // current number of filled entries.
+	entries [itabInitSize]*itab // really [size] large
+}
+func (t *itabTableType) find(inter *interfacetype, typ *_type) *itab {
+  ....
+}
+</code></pre></li>
+</ul>
+<p>空接口.(非空接口)</p>
+<p>![image-20220820212352618](/Users/wuguangkuo/Library/Application Support/typora-user-images/image-20220820212352618.png)</p>
+<ul>
+<li>比较空接口的动态类型是否实现非空接口的方法</li>
+<li>非空接口和空接口的动态类型是否在itab缓存中接口</li>
+</ul>
+<p>非空接口.(非空接口)</p>
+<p>![image-20220820213907033](/Users/wuguangkuo/Library/Application Support/typora-user-images/image-20220820213907033.png)</p>
+<ul>
+<li>比较动态类型是否实现非空接口的方法</li>
+<li>被断言非空接口和动态类型是否在itab缓存中接口</li>
+</ul>
+<h3 id="34-接口与反射">
+  3.4 接口与反射
+  <a class="anchor" href="#34-%e6%8e%a5%e5%8f%a3%e4%b8%8e%e5%8f%8d%e5%b0%84">#</a>
+</h3>
+<ul>
+<li>
+<p>反射可以将“接口类型变量”转换为“反射类型对象”</p>
+</li>
+<li>
+<p>反射可以将“反射类型对象”转换为“接口类型变量”</p>
+</li>
+<li>
+<p>如果要修改“反射类型对象”，其值必须是“可写的”（settable） <a href="https://go.dev/blog/laws-of-reflection">https://go.dev/blog/laws-of-reflection</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">testInt</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">of</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">ValueOf</span>(<span style="color:#a6e22e">testInt</span>) <span style="color:#75715e">// 接口类型值转换为反射类型的值, law-1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">reflectInt</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">of</span>.<span style="color:#a6e22e">Interface</span>()   <span style="color:#75715e">// 反射类型的值转换为接口类型的值 law-2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#75715e">//of.SetInt(19)                  //panic law-3
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">ValueOf</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">testInt</span>).<span style="color:#a6e22e">Elem</span>().<span style="color:#a6e22e">SetInt</span>(<span style="color:#ae81ff">12</span>)
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">reflectInt</span>, <span style="color:#a6e22e">testInt</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+</ul>
+<p>![image-20220820112359414](/Users/wuguangkuo/Library/Application Support/typora-user-images/image-20220820112359414.png)</p>
+<p>​		reflect中的rtype结构和runtime._type接口保持一致,runtime包中的内容不允许访问,所以才有了reflect包</p>
+<p><img src="https://lh5.googleusercontent.com/x71tLs5rENo3hf_ZK04SWlORTzJv1t93uOmCKEj87p2jQMa8DuZjwJ1Nx2LIVFtb3JHbJMH-fnPNogDG04RSc19jCNVB8AIDFhJSI0c2xKRGTW7E6i6L7pLSuGWqd4YXmtnfvFvAgwDiY3IcvbX6pPt7DApF14JEKQUKuezxQP4CMvoDjJAs" alt="img" /></p>
+<h2 id="4-反射性能">
+  4 反射性能
+  <a class="anchor" href="#4-%e5%8f%8d%e5%b0%84%e6%80%a7%e8%83%bd">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Foo</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">Name</span> <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`tag1:&#34;First Tag&#34; json:&#34;name&#34;`</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">Age</span>  <span style="color:#66d9ef">int</span>    <span style="color:#e6db74">`json:&#34;age&#34;`</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">BenchmarkReflectUpdate</span>(<span style="color:#a6e22e">b</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">testing</span>.<span style="color:#a6e22e">B</span>) {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">Foo</span>{
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">Name</span>: <span style="color:#e6db74">&#34;origin&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">Age</span>:  <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">N</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">//ReflectUpdate(&amp;f)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Name</span> = <span style="color:#e6db74">&#34;origin set&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Age</span> = <span style="color:#a6e22e">i</span>
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ReflectUpdate 反射修改 f 值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ReflectUpdate</span>(<span style="color:#a6e22e">f</span> <span style="color:#66d9ef">interface</span>{}) {
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">ValueOf</span>(<span style="color:#a6e22e">f</span>)
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">v</span>.<span style="color:#a6e22e">Kind</span>() <span style="color:#f92672">!=</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">Ptr</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">v</span>.<span style="color:#a6e22e">Elem</span>().<span style="color:#a6e22e">Type</span>().<span style="color:#a6e22e">Name</span>() <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;Foo&#34;</span> {
+</span></span><span style="display:flex;"><span>      panic(<span style="color:#e6db74">&#34;not match type&#34;</span>)
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">ve</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">v</span>.<span style="color:#a6e22e">Elem</span>()
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">//ve.Field(0).SetString(&#34;reflect modify&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#75715e">//ve.Field(1).SetInt(100)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">ve</span>.<span style="color:#a6e22e">FieldByName</span>(<span style="color:#e6db74">&#34;Name&#34;</span>).<span style="color:#a6e22e">SetString</span>(<span style="color:#e6db74">&#34;fieldByName modify&#34;</span>)
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">ve</span>.<span style="color:#a6e22e">FieldByName</span>(<span style="color:#e6db74">&#34;Age&#34;</span>).<span style="color:#a6e22e">SetInt</span>(<span style="color:#ae81ff">999</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">测试结果</span>:
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">直接赋值</span>:
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">goos</span>: <span style="color:#a6e22e">darwin</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">goarch</span>: <span style="color:#a6e22e">amd64</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">BenchmarkReflectUpdate</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">BenchmarkReflectUpdate</span><span style="color:#f92672">-</span><span style="color:#ae81ff">12</span>    	<span style="color:#ae81ff">1000000000</span>	         <span style="color:#ae81ff">0.291</span> <span style="color:#a6e22e">ns</span><span style="color:#f92672">/</span><span style="color:#a6e22e">op</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">field</span><span style="color:#960050;background-color:#1e0010">反射</span>:
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">goos</span>: <span style="color:#a6e22e">darwin</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">goarch</span>: <span style="color:#a6e22e">amd64</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">BenchmarkReflectUpdate</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">BenchmarkReflectUpdate</span><span style="color:#f92672">-</span><span style="color:#ae81ff">12</span>    	<span style="color:#ae81ff">55756632</span>	        <span style="color:#ae81ff">18.5</span> <span style="color:#a6e22e">ns</span><span style="color:#f92672">/</span><span style="color:#a6e22e">op</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">fieldByName</span><span style="color:#960050;background-color:#1e0010">反射</span>:
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">goos</span>: <span style="color:#a6e22e">darwin</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">goarch</span>: <span style="color:#a6e22e">amd64</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">BenchmarkReflectUpdate</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">BenchmarkReflectUpdate</span><span style="color:#f92672">-</span><span style="color:#ae81ff">12</span>    	 <span style="color:#ae81ff">8810466</span>	       <span style="color:#ae81ff">123</span> <span style="color:#a6e22e">ns</span><span style="color:#f92672">/</span><span style="color:#a6e22e">op</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">直接赋值~</span>=<span style="color:#ae81ff">63</span><span style="color:#f92672">*</span><span style="color:#a6e22e">Field</span><span style="color:#960050;background-color:#1e0010">反射~</span>=<span style="color:#ae81ff">422</span><span style="color:#f92672">*</span><span style="color:#a6e22e">FieldByName</span><span style="color:#960050;background-color:#1e0010">反射修改</span>
+</span></span></code></pre></div><h2 id="5-反射应用">
+  5 反射应用
+  <a class="anchor" href="#5-%e5%8f%8d%e5%b0%84%e5%ba%94%e7%94%a8">#</a>
+</h2>
+<p>官方包：</p>
+<ol>
+<li>
+<p>fmt系列</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%T&#34;</span>,<span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">对应的代码</span>:
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">verb</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;T&#39;</span>:
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">fmtS</span>(<span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">TypeOf</span>(<span style="color:#a6e22e">arg</span>).<span style="color:#a6e22e">String</span>())
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;p&#39;</span>:
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">p</span>.<span style="color:#a6e22e">fmtPointer</span>(<span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">ValueOf</span>(<span style="color:#a6e22e">arg</span>), <span style="color:#e6db74">&#39;p&#39;</span>)
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+<li>
+<p>reflect.DeepEqual</p>
+<ul>
+<li>比较类型,类型不同返回false,</li>
+<li>递归比较值</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">TestDeepReflect</span>(<span style="color:#a6e22e">t</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">testing</span>.<span style="color:#a6e22e">T</span>) {
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">a</span> <span style="color:#66d9ef">int32</span> = <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">rune</span> = <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">DeepEqual</span>(<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>))
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">结果</span>: 
+</span></span><span style="display:flex;"><span><span style="color:#f92672">==</span>= <span style="color:#a6e22e">RUN</span>   <span style="color:#a6e22e">TestDeepReflect</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">---</span> <span style="color:#a6e22e">PASS</span>: <span style="color:#a6e22e">TestDeepReflect</span> (<span style="color:#ae81ff">0.00</span><span style="color:#a6e22e">s</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">PASS</span>
+</span></span></code></pre></div></li>
+<li>
+<p>json 对象序列化和反序列化</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Marshal</span>(<span style="color:#a6e22e">v</span> <span style="color:#66d9ef">interface</span>{})([]<span style="color:#66d9ef">byte</span>, <span style="color:#66d9ef">error</span>) <span style="color:#75715e">//接口interface{}类型,返回字节切片
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Unmarshal</span>(<span style="color:#a6e22e">data</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">v</span> <span style="color:#66d9ef">interface</span>{}) <span style="color:#66d9ef">error</span> <span style="color:#75715e">// 如果为字节切片, interface类型4、...
+</span></span></span></code></pre></div></li>
+</ol>
+<p>第三方包</p>
+<ol>
+<li><a href="https://pkg.go.dev/google.golang.org/protobuf/reflect/protoreflect">proto reflect</a></li>
+<li>xorm:  go提供的关系对象模型操作库,运用反射</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">beanKind</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">case</span> <span style="color:#a6e22e">reflect</span>.<span style="color:#a6e22e">Struct</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#960050;background-color:#1e0010">下·下·</span> <span style="color:#a6e22e">fields</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rows</span>.<span style="color:#a6e22e">Columns</span>()
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">// WARN: Alougth rows return true, but get fields failed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">scanResults</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">row2Slice</span>(<span style="color:#a6e22e">rows</span>, <span style="color:#a6e22e">fields</span>, <span style="color:#a6e22e">bean</span>)
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// close it before covert data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">rows</span>.<span style="color:#a6e22e">Close</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">dataStruct</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rValue</span>(<span style="color:#a6e22e">bean</span>)
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">slice2Bean</span>(<span style="color:#a6e22e">scanResults</span>, <span style="color:#a6e22e">fields</span>, <span style="color:#a6e22e">bean</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">dataStruct</span>, <span style="color:#a6e22e">table</span>)
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>, <span style="color:#a6e22e">session</span>.<span style="color:#a6e22e">executeProcessors</span>()
+</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-反射使用">1 反射使用</a>
+      <ul>
+        <li><a href="#11-反射获取数据类型">1.1 反射获取数据类型</a></li>
+        <li><a href="#12-反射获取对应的值">1.2 反射获取对应的值</a></li>
+        <li><a href="#13-反射修改值">1.3 反射修改值</a></li>
+        <li><a href="#14-反射make">1.4 反射make</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-反射优缺点">2 反射优缺点</a></li>
+    <li><a href="#3-原理走读">3 原理走读</a>
+      <ul>
+        <li><a href="#31-类型元数据">3.1 类型元数据</a></li>
+        <li><a href="#32-接口">3.2 接口</a></li>
+        <li><a href="#33-类型断言">3.3 类型断言</a></li>
+        <li><a href="#34-接口与反射">3.4 接口与反射</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-反射性能">4 反射性能</a></li>
+    <li><a href="#5-反射应用">5 反射应用</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>redis on My New Hugo Site</title>
+    <link>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/</link>
+    <description>Recent content in redis on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language><atom:link href="http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E6%9E%B6%E6%9E%84/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E6%9E%B6%E6%9E%84/</guid>
+      <description>redis 架构 # 持久化方式 # rdb: fork进程
+aof: 一个线程,
+一致性hash: # 一致哈希 是一种特殊的哈希算法。在使用一致哈希算法后，哈希表槽位数（大小）的改变平均只需要对 K/n 个关键字重新映射，其中 K 是关键字的数量，n 是槽位数量。然而在传统的哈希表中，添加或删除一个槽位的几乎需要对所有关键字进行重新映射。
+多级缓存: # 缓存更新、缓存一致性问题
+key&amp;mdash;key&amp;mdash;&amp;gt;value形式 还是key-value形式</description>
+    </item>
+    
+  </channel>
+</rss>

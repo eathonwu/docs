@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>java基础 on My New Hugo Site</title>
+    <link>http://example.org/docs/java%E5%9F%BA%E7%A1%80/</link>
+    <description>Recent content in java基础 on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language><atom:link href="http://example.org/docs/java%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>http://example.org/docs/java%E5%9F%BA%E7%A1%80/jvm/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/java%E5%9F%BA%E7%A1%80/jvm/</guid>
+      <description>TODO</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/docs/java%E5%9F%BA%E7%A1%80/lambda/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/java%E5%9F%BA%E7%A1%80/lambda/</guid>
+      <description> Optional # Optional用法:
+无法判断被调用传递过来的list 是否为空, 可以省略if null的判断条件
+List&amp;lt;String&amp;gt; carsFiltered = Optional.ofNullable(cars) .orElseGet(Collections::emptyList) .stream() .filter(Objects::nonNull) //filtering car object that are null .map(Car::getName) //now it&amp;#39;s a stream of Strings .filter(Objects::nonNull) //filtering null in Strings .filter(name -&amp;gt; name.startsWith(&amp;#34;M&amp;#34;)) .collect(Collectors.toList()); //back to List of Strings </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/docs/java%E5%9F%BA%E7%A1%80/%E7%BA%BF%E7%A8%8B%E6%B1%A0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/java%E5%9F%BA%E7%A1%80/%E7%BA%BF%E7%A8%8B%E6%B1%A0/</guid>
+      <description>TODO</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/docs/java%E5%9F%BA%E7%A1%80/%E9%9B%86%E5%90%88/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/java%E5%9F%BA%E7%A1%80/%E9%9B%86%E5%90%88/</guid>
+      <description>TODO</description>
+    </item>
+    
+  </channel>
+</rss>
