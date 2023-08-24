@@ -12,7 +12,17 @@ Basic Paxos 中存在 3 个重要的角色：
 
 
 
+# **Paxos** 三种角色:**Proposer**，**Acceptor**，**Learners**
 
+**Proposer**:
+
+只要 Proposer 发的提案被半数以上 Acceptor 接受，Proposer 就认为该提案里的 value 被选定 了。
+
+**Acceptor**:
+ 只要 Acceptor 接受了某个提案，Acceptor 就认为该提案里的 value 被选定了。
+
+**Learner**:
+ Acceptor 告诉 Learner 哪个 value 被选定，Learner 就认为那个 value 被选定。
 
 
 
