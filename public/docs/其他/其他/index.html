@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="java 锁 # 自旋锁 实现cpu空转 会存在超时的情况
+ReentrantLock # 可重入锁: 巧用condition
+用这个await 、notifyAll 可以实现线程通信,但是出现超时情况
+Semaphore # 交替打印:
+class FooBar { private int n; Semaphore fooS = new Semaphore(1); Semaphore barS = new Semaphore(0); public FooBar(int n) { this.n = n; } public void foo(Runnable printFoo) throws InterruptedException { for (int i = 0; i &lt; n; i&#43;&#43;) { fooS.acquire(); printFoo.run(); barS.release(); } } public void bar(Runnable printBar) throws InterruptedException { for (int i = 0; i &lt; n; i&#43;&#43;) { barS.">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="" />
+<meta property="og:description" content="java 锁 # 自旋锁 实现cpu空转 会存在超时的情况
+ReentrantLock # 可重入锁: 巧用condition
+用这个await 、notifyAll 可以实现线程通信,但是出现超时情况
+Semaphore # 交替打印:
+class FooBar { private int n; Semaphore fooS = new Semaphore(1); Semaphore barS = new Semaphore(0); public FooBar(int n) { this.n = n; } public void foo(Runnable printFoo) throws InterruptedException { for (int i = 0; i &lt; n; i&#43;&#43;) { fooS.acquire(); printFoo.run(); barS.release(); } } public void bar(Runnable printBar) throws InterruptedException { for (int i = 0; i &lt; n; i&#43;&#43;) { barS." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/docs/%E5%85%B6%E4%BB%96/%E5%85%B6%E4%BB%96/" /><meta property="article:section" content="docs" />
+
+
+<title>其他 | My New Hugo Site</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/book.min.c58292d36b18b675680ab9baea2029204537b839ea72f258746ec0f32ce8d6c8.css" integrity="sha256-xYKS02sYtnVoCrm66iApIEU3uDnqcvJYdG7A8yzo1sg=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.5f826a12543ba6a5ab17c6b2d774177bd99cb98661f9f7bf5a9b2a3a4a496528.js" integrity="sha256-X4JqElQ7pqWrF8ay13QXe9mcuYZh&#43;fe/WpsqOkpJZSg=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>My New Hugo Site</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>go语言基础</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/gmp%E6%A8%A1%E5%9E%8B/" class="">Gmp模型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/slice/" class="">Slice</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/%E5%8F%8D%E5%B0%84/" class="">反射</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/" class="">java基础</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/juc/" class="">Juc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/jvm/" class="">Jvm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/lambda/" class="">Lambda</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/skiplist/" class="">Skiplist</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/volatile/" class="">Volatile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="">基本数据类型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="">线程池</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/%E9%9B%86%E5%90%88/" class="">集合</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>其他</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/c%E8%AF%AD%E8%A8%80/" class="">其他</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E5%85%B6%E4%BB%96/" class="active">其他</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E6%9E%B6%E6%9E%84%E5%9F%BA%E7%A1%80/" class="">架构基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/" class="">疑难杂症</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>分布式</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/raft%E5%8D%8F%E8%AE%AE/" class="">分布式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/gossip%E5%8D%8F%E8%AE%AE/" class="">Gossip协议</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/paxos/" class="">Paxos</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/zab%E5%8D%8F%E8%AE%AE/" class="">Zab协议</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BA%8B%E5%8A%A1/" class="">事务</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>数据库</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>elasticsearch</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/elasticsearch/%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87/" class="">数据分片</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/elasticsearch/%E8%B0%83%E4%BC%98/" class="">调优</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/" class="">clickhosue</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/sql-join/" class="">SQL Join</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/%E7%89%A9%E5%8C%96%E8%A7%86%E5%9B%BE/" class="">物化视图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/%E8%BF%90%E7%BB%B4%E7%9B%B8%E5%85%B3/" class="">运维相关</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>mysql</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E7%B4%A2%E5%BC%95/" class="">索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/mvcc%E6%A8%A1%E5%9E%8B/" class="">Mvcc模型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E4%BA%8B%E5%8A%A1/" class="">事务</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E9%94%81/" class="">锁</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>redis</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="">分布式锁</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E5%8F%8C%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/" class="">双写一致性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E6%9E%B6%E6%9E%84/" class="">架构</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>算法</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="">动态规划</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E7%AE%97%E6%B3%95/%E5%9B%9E%E6%BA%AF/" class="">回溯</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E7%AE%97%E6%B3%95/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="">贪心算法</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/" class="">Linux</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/nvim/" class="">Nvim</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="">常用命令</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%9E%B6%E6%9E%84/" class="">架构</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%9E%B6%E6%9E%84/%E5%BE%AE%E4%BF%A1%E6%9E%B6%E6%9E%84/" class="">微信架构</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>其他</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#reentrantlock">ReentrantLock</a></li>
+    <li><a href="#semaphore">Semaphore</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#offset管理">offset管理</a></li>
+    <li><a href="#时间轮">时间轮</a></li>
+    <li><a href="#io模型">io模型</a></li>
+    <li><a href="#高性能写">高性能写</a></li>
+    <li><a href="#高性能读">高性能读</a></li>
+    <li><a href="#controller作用">controller作用</a></li>
+    <li><a href="#rebalance">rebalance</a></li>
+    <li><a href="#消费策略">消费策略</a></li>
+    <li><a href="#集群规划">集群规划</a></li>
+    <li><a href="#问题">问题</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#slice底层实现">Slice底层实现</a></li>
+    <li><a href="#map-底层实现">Map 底层实现</a></li>
+    <li><a href="#接口">接口</a></li>
+    <li><a href="#gmp">GMP</a></li>
+    <li><a href="#管道">管道</a></li>
+    <li><a href="#协程">协程</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#各版本区别">各版本区别</a></li>
+    <li><a href="#长链接">长链接</a></li>
+    <li><a href="#短链接">短链接</a></li>
+    <li><a href="#长轮询">长轮询</a></li>
+    <li><a href="#短轮询">短轮询</a></li>
+    <li><a href="#配置中心长轮询">配置中心长轮询</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#threadlocal">ThreadLocal</a></li>
+    <li><a href="#redis">redis</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#七层模型">七层模型</a></li>
+    <li><a href="#四层模型">四层模型</a></li>
+    <li><a href="#arp">ARP</a></li>
+    <li><a href="#nat">NAT</a></li>
+    <li><a href="#四次握手">四次握手</a></li>
+    <li><a href="#问题-1">问题</a></li>
+    <li><a href="#缓存机制">缓存机制</a></li>
+    <li><a href="#https工作原理">HTTPS工作原理</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#单线程reator单线程">单线程reator、单线程</a></li>
+    <li><a href="#单线程reactor多线程">单线程reactor、多线程</a></li>
+    <li><a href="#多线程reactor-单线程不常用">多线程reactor 、单线程,不常用</a></li>
+    <li><a href="#多线程reator多线程">多线程reator、多线程</a></li>
+    <li><a href="#ouath-协议工作流程">ouath 协议工作流程</a></li>
+    <li><a href="#imghttpspic2zhimgcom80v2-8d626a3f8af30d7c36ebadf2894af571_1440wwebp"><img src="https://pic2.zhimg.com/80/v2-8d626a3f8af30d7c36ebadf2894af571_1440w.webp" alt="img"></a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#spring-cloud-eureka">Spring Cloud Eureka：</a></li>
+    <li><a href="#spring-cloud-hystrix断路器">Spring Cloud Hystrix：断路器</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#分片规划">分片规划</a></li>
+    <li><a href="#redis-1">Redis</a></li>
+    <li><a href="#homo-redis">homo redis</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#内存泄漏">内存泄漏</a></li>
+    <li><a href="#内存溢出">内存溢出</a></li>
+    <li><a href="#问题排查">问题排查</a></li>
+    <li><a href="#mysql">mysql</a></li>
+    <li><a href="#执行过程">执行过程</a></li>
+    <li><a href="#查询缓存">查询缓存</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#动态加载类框架">动态加载类框架</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#slice">slice</a></li>
+    <li><a href="#map">Map:</a></li>
+    <li><a href="#rehash">rehash</a></li>
+    <li><a href="#gmp模型">GMP模型:</a></li>
+    <li><a href="#spring-为什么需要三级缓存解决循环依赖问题">Spring 为什么需要三级缓存解决循环依赖问题</a></li>
+    <li><a href="#springboot启动流程">springboot启动流程</a></li>
+    <li><a href="#explain语句">explain语句</a></li>
+    <li><a href="#三级缓存">三级缓存</a></li>
+    <li><a href="#gc">gc</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="java-锁">
+  java 锁
+  <a class="anchor" href="#java-%e9%94%81">#</a>
+</h1>
+<p>自旋锁 实现cpu空转 会存在超时的情况</p>
+<h2 id="reentrantlock">
+  ReentrantLock
+  <a class="anchor" href="#reentrantlock">#</a>
+</h2>
+<p>可重入锁:  巧用condition</p>
+<p>用这个await 、notifyAll 可以实现线程通信,但是出现超时情况</p>
+<h2 id="semaphore">
+  Semaphore
+  <a class="anchor" href="#semaphore">#</a>
+</h2>
+<p>交替打印:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FooBar</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    Semaphore fooS <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Semaphore<span style="color:#f92672">(</span>1<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    Semaphore barS <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Semaphore<span style="color:#f92672">(</span>0<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FooBar</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">n</span> <span style="color:#f92672">=</span> n<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">foo</span><span style="color:#f92672">(</span>Runnable printFoo<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>             fooS<span style="color:#f92672">.</span><span style="color:#a6e22e">acquire</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>             printFoo<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>             barS<span style="color:#f92672">.</span><span style="color:#a6e22e">release</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">bar</span><span style="color:#f92672">(</span>Runnable printBar<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            barS<span style="color:#f92672">.</span><span style="color:#a6e22e">acquire</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            printBar<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            fooS<span style="color:#f92672">.</span><span style="color:#a6e22e">release</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="volatile">
+  volatile
+  <a class="anchor" href="#volatile">#</a>
+</h1>
+<p>volatile实现比较轻量化</p>
+<h1 id="cyclicbarrier">
+  CyclicBarrier
+  <a class="anchor" href="#cyclicbarrier">#</a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-.java" data-lang=".java"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FizzBuzz</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    CyclicBarrier barrier <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> CyclicBarrier<span style="color:#f92672">(</span>4<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FizzBuzz</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">n</span> <span style="color:#f92672">=</span> n<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// printFizz.run() outputs &#34;fizz&#34;.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fizz</span><span style="color:#f92672">(</span>Runnable printFizz<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>1<span style="color:#f92672">;</span>i<span style="color:#f92672">&lt;=</span>n<span style="color:#f92672">;</span>i<span style="color:#f92672">++){</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>i<span style="color:#f92672">%</span>3<span style="color:#f92672">==</span>0 <span style="color:#f92672">&amp;&amp;</span> i<span style="color:#f92672">%</span>5<span style="color:#f92672">!=</span>0<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>                printFizz<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>             <span style="color:#66d9ef">try</span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    barrier<span style="color:#f92672">.</span><span style="color:#a6e22e">await</span><span style="color:#f92672">();</span> <span style="color:#75715e">// await 到点循环
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#f92672">}</span><span style="color:#66d9ef">catch</span><span style="color:#f92672">(</span>Exception e<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// printBuzz.run() outputs &#34;buzz&#34;.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">buzz</span><span style="color:#f92672">(</span>Runnable printBuzz<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>1<span style="color:#f92672">;</span>i<span style="color:#f92672">&lt;=</span>n<span style="color:#f92672">;</span>i<span style="color:#f92672">++){</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>i<span style="color:#f92672">%</span>5<span style="color:#f92672">==</span>0<span style="color:#f92672">&amp;&amp;</span>i<span style="color:#f92672">%</span>3<span style="color:#f92672">!=</span>0<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>                printBuzz<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>             <span style="color:#66d9ef">try</span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    barrier<span style="color:#f92672">.</span><span style="color:#a6e22e">await</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span><span style="color:#66d9ef">catch</span><span style="color:#f92672">(</span>Exception e<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// printFizzBuzz.run() outputs &#34;fizzbuzz&#34;.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fizzbuzz</span><span style="color:#f92672">(</span>Runnable printFizzBuzz<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>1<span style="color:#f92672">;</span>i<span style="color:#f92672">&lt;=</span>n<span style="color:#f92672">;</span>i<span style="color:#f92672">++){</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>i<span style="color:#f92672">%</span>15<span style="color:#f92672">==</span>0<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>                printFizzBuzz<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    barrier<span style="color:#f92672">.</span><span style="color:#a6e22e">await</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span><span style="color:#66d9ef">catch</span><span style="color:#f92672">(</span>Exception e<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// printNumber.accept(x) outputs &#34;x&#34;, where x is an integer.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">number</span><span style="color:#f92672">(</span>IntConsumer printNumber<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>1<span style="color:#f92672">;</span>i<span style="color:#f92672">&lt;=</span>n<span style="color:#f92672">;</span>i<span style="color:#f92672">++){</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>i<span style="color:#f92672">%</span>3<span style="color:#f92672">!=</span>0<span style="color:#f92672">&amp;&amp;</span>i<span style="color:#f92672">%</span>5<span style="color:#f92672">!=</span>0<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>                printNumber<span style="color:#f92672">.</span><span style="color:#a6e22e">accept</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    barrier<span style="color:#f92672">.</span><span style="color:#a6e22e">await</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span><span style="color:#66d9ef">catch</span><span style="color:#f92672">(</span>Exception e<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="kafka">
+  kafka
+  <a class="anchor" href="#kafka">#</a>
+</h1>
+<h2 id="offset管理">
+  offset管理
+  <a class="anchor" href="#offset%e7%ae%a1%e7%90%86">#</a>
+</h2>
+<ol>
+<li>每个consumer内存里数据结构保存对每个topic的每个分区的消费offset，定期会提交offset，老版本是写入zk，但是那样高并发请求zk是不合理的架构设计，zk是做分布式系统的协调的，轻量级的元数据存储，不能负责高并发读写，作为数据存储。</li>
+<li>现在新的版本提交offset发送给kafka内部topic：__consumer_offsets，提交过去的时候， key是group.id+topic+分区号，value就是当前offset的值，每隔一段时间，kafka内部会对这个topic进行compact(合并)，也就是每个group.id+topic+分区号就保留最新数据。</li>
+<li>__consumer_offsets可能会接收高并发的请求，所以默认分区50个(leader partitiron -&gt; 50 kafka)，这样如果你的kafka部署了一个大的集群，比如有50台机器，就可以用50台机器来抗offset提交的请求压力.</li>
+</ol>
+<h2 id="时间轮">
+  时间轮
+  <a class="anchor" href="#%e6%97%b6%e9%97%b4%e8%bd%ae">#</a>
+</h2>
+<p>​	循环数组 + 链表</p>
+<p>​	使用地方:</p>
+<ul>
+<li>leader向follow发送数据 ,维护时间轮 ,控制超时</li>
+<li>follow 向 leader 拉取数据的时候 ,如果拉去的数据为空,  维护时间轮, 过段时间在拉取</li>
+</ul>
+<h2 id="io模型">
+  io模型
+  <a class="anchor" href="#io%e6%a8%a1%e5%9e%8b">#</a>
+</h2>
+<p>基于nio io多路复用</p>
+<ul>
+<li>多个selector监听机制 ?</li>
+<li>读请求维护一个队列 ?</li>
+</ul>
+<h2 id="高性能写">
+  高性能写
+  <a class="anchor" href="#%e9%ab%98%e6%80%a7%e8%83%bd%e5%86%99">#</a>
+</h2>
+<p>​	基于mmap , 顺序写</p>
+<h2 id="高性能读">
+  高性能读
+  <a class="anchor" href="#%e9%ab%98%e6%80%a7%e8%83%bd%e8%af%bb">#</a>
+</h2>
+<p>​	使用零拷贝技术 , 避免无用的内存拷贝</p>
+<p>​	零copy</p>
+<p>零拷贝技术实现的方式通常有 2 种：</p>
+<ul>
+<li>mmap + write</li>
+<li>sendfile</li>
+</ul>
+<p>kafka调用java的transfer 接口,底层使用的是sendfile技术,pagecache(通过预读的方式)进一步提升零拷贝的性能,</p>
+<p>直接io: 跳过内核cache,用户cache和磁盘数据进行交互</p>
+<h2 id="controller作用">
+  controller作用
+  <a class="anchor" href="#controller%e4%bd%9c%e7%94%a8">#</a>
+</h2>
+<p>​	维护集群元数据信息, 分区选主 ,</p>
+<h2 id="rebalance">
+  rebalance
+  <a class="anchor" href="#rebalance">#</a>
+</h2>
+<p>​		coordinator 每个consumer group都会选择一个broker作为自己的coordinator，他是负责监控这个消费组里的各个消费者的心跳，以及判断是否宕机，然后开启rebalance的.</p>
+<p>​	如何选择coordinator机器 首先对groupId进行hash（数字），接着对__consumer_offsets的分区数量取模，默认是50，_consumer_offsets的分区数可以通过offsets.topic.num.partitions来设置，找到分区以后，这个分区所在的broker机器就是coordinator机器。比如说：groupId，“myconsumer_group” -&gt; hash值（数字）-&gt; 对50取模 -&gt; 8 __consumer_offsets 这个主题的8号分区在哪台broker上面，那一台就是coordinator 就知道这个consumer group下的所有的消费者提交offset的时候是往哪个分区去提交offset</p>
+<h2 id="消费策略">
+  消费策略
+  <a class="anchor" href="#%e6%b6%88%e8%b4%b9%e7%ad%96%e7%95%a5">#</a>
+</h2>
+<ul>
+<li>range 按分区数量划分,</li>
+<li>round-robin 轮训</li>
+<li>sticky  (range + sticky)</li>
+</ul>
+<h2 id="集群规划">
+  集群规划
+  <a class="anchor" href="#%e9%9b%86%e7%be%a4%e8%a7%84%e5%88%92">#</a>
+</h2>
+<p>​	考虑并发、内存</p>
+<p>​	机械硬盘</p>
+<h2 id="问题">
+  问题
+  <a class="anchor" href="#%e9%97%ae%e9%a2%98">#</a>
+</h2>
+<ul>
+<li>
+<p>Kafka存储在硬盘上的消息格式是什么？</p>
+<p>一般的协议数据格式 : 版本号、消息长度、校验码 &mdash; 具体消息</p>
+</li>
+<li>
+<p>Kafka高效文件存储设计特点：</p>
+<p>一个partiton 对应一个文件, 分多段,每段大小固定 (.log、.index) , 方便滚动删除 , 对.log文件进行索引, 并全部映射到内存, 通过二分查找index, 快速定位文件位置</p>
+<p>topic的分区分配到broker 上由controller节点控制, 随机落在一个接点上 ,轮询分配</p>
+<p>数据存储在logs.dir、log.dirs上 ,分区目录最少的有限分配</p>
+</li>
+</ul>
+<h1 id="go">
+  GO
+  <a class="anchor" href="#go">#</a>
+</h1>
+<h2 id="slice底层实现">
+  Slice底层实现
+  <a class="anchor" href="#slice%e5%ba%95%e5%b1%82%e5%ae%9e%e7%8e%b0">#</a>
+</h2>
+<h2 id="map-底层实现">
+  Map 底层实现
+  <a class="anchor" href="#map-%e5%ba%95%e5%b1%82%e5%ae%9e%e7%8e%b0">#</a>
+</h2>
+<h2 id="接口">
+  接口
+  <a class="anchor" href="#%e6%8e%a5%e5%8f%a3">#</a>
+</h2>
+<h2 id="gmp">
+  GMP
+  <a class="anchor" href="#gmp">#</a>
+</h2>
+<h2 id="管道">
+  管道
+  <a class="anchor" href="#%e7%ae%a1%e9%81%93">#</a>
+</h2>
+<p>​	channel 底层实现原理 :</p>
+<h2 id="协程">
+  协程
+  <a class="anchor" href="#%e5%8d%8f%e7%a8%8b">#</a>
+</h2>
+<p>​		和线程、线程对比</p>
+<h1 id="http">
+  http
+  <a class="anchor" href="#http">#</a>
+</h1>
+<h2 id="各版本区别">
+  各版本区别
+  <a class="anchor" href="#%e5%90%84%e7%89%88%e6%9c%ac%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<ul>
+<li>1.0  都需要进行一次tcp连接（即3次握手4次挥手），使得网络的利用率非常低,HTTP 1.0 规定在前一个请求响应到达之后下一个请求才能发送，如果前一个阻塞，后面的请求也给阻塞的</li>
+<li>1.1  基于长链接(使用keep-alive参数保证链接不断),默认保持长连接，数据传输完成保持tcp连接不断开,继续用这个通道传输数据,管线化保证发送批量数据 、但是接收端还是得一个个进行处理</li>
+<li>2.0 头部压缩 , 二进制编码, 多路复用： 在共享TCP链接的基础上同时发送请求和响应</li>
+<li>3.0 基于udp传输,解决tcp 对头阻塞问题 , 基于quic协议进行</li>
+</ul>
+<h2 id="长链接">
+  长链接
+  <a class="anchor" href="#%e9%95%bf%e9%93%be%e6%8e%a5">#</a>
+</h2>
+<h2 id="短链接">
+  短链接
+  <a class="anchor" href="#%e7%9f%ad%e9%93%be%e6%8e%a5">#</a>
+</h2>
+<h2 id="长轮询">
+  长轮询
+  <a class="anchor" href="#%e9%95%bf%e8%bd%ae%e8%af%a2">#</a>
+</h2>
+<p>​	客户端发送一个请求，服务器保持连接打开，直到有新数据或超时。</p>
+<h2 id="短轮询">
+  短轮询
+  <a class="anchor" href="#%e7%9f%ad%e8%bd%ae%e8%af%a2">#</a>
+</h2>
+<p>​	客户端频繁发送请求，服务器及时响应，不管是否有新数据</p>
+<h2 id="配置中心长轮询">
+  配置中心长轮询
+  <a class="anchor" href="#%e9%85%8d%e7%bd%ae%e4%b8%ad%e5%bf%83%e9%95%bf%e8%bd%ae%e8%af%a2">#</a>
+</h2>
+<p>Spring Cloud Config使用长轮询（Long Polling）机制来实现实时获取配置更新的功能。这意味着客户端向配置服务器发送请求，并保持连接打开，直到有新的配置更新或超时发生。</p>
+<p>当客户端向Spring Cloud Config服务器发送配置获取请求时，服务器会在配置更新时立即返回响应，并传递最新的配置信息给客户端。如果没有新的配置更新，服务器会将连接保持一段时间，等待配置的变更事件发生。如果超时时间到达而没有新的配置变更，则服务器会发送一个特殊的响应，指示客户端重新发送配置获取请求。</p>
+<p>通过使用长轮询，Spring Cloud Config可以实现实时的配置更新推送。相对于短轮询，长轮询能够减少无效的请求发送频率，降低了服务器和网络的负载，同时提供了更好的实时性和有效性。</p>
+<p>因此，Spring Cloud Config采用长轮询作为默认的配置获取机制，以实现实时的配置更新推送，提供更好的用户体验和性能。</p>
+<h1 id="hydrix-断路器">
+  hydrix 断路器
+  <a class="anchor" href="#hydrix-%e6%96%ad%e8%b7%af%e5%99%a8">#</a>
+</h1>
+<p>故障大于50% ,开启状态, 5秒后, 处于半开状态 ,释放一部分流量 ,  如果还是失败继续处于开启状态</p>
+<h1 id="volatile-1">
+  volatile
+  <a class="anchor" href="#volatile-1">#</a>
+</h1>
+<p>请谈谈volatile有什么特点，为什么它能保证变量对所有线程的可见性？</p>
+<p>volatile 能保证变量对所有线程的可见性的原理是基于 CPU 缓存一致性协议。在多核处理器中，每个 CPU 都有自己的缓存，这些缓存中存储了主存中的部分数据副本。当一个线程修改了某个变量的值时，它会将修改后的值写回到主存中，并通知其他 CPU 缓存该变量的值已经发生了改变。当其他线程访问该变量时，它们会从主存中读取最新的值，而不是从自己的缓存中读取旧的值</p>
+<h2 id="threadlocal">
+  ThreadLocal
+  <a class="anchor" href="#threadlocal">#</a>
+</h2>
+<p>使用注意事项:</p>
+<ul>
+<li>需要考虑 内存泄漏问题 ,  使用完及时的remove,  ThreadLocal惰性删除 ,本身就会删除</li>
+<li>线程池问题 , 会有些垃圾数据 ,注意使用场景</li>
+</ul>
+<h2 id="redis">
+  redis
+  <a class="anchor" href="#redis">#</a>
+</h2>
+<ul>
+<li>
+<p>缓存穿透  : 没有的key 穿透</p>
+</li>
+<li>
+<p>缓存击穿:  热key过期</p>
+</li>
+<li>
+<p>缓存雪崩:  同一时间点, 大面积key过期</p>
+</li>
+</ul>
+<h1 id="网络模型">
+  网络模型
+  <a class="anchor" href="#%e7%bd%91%e7%bb%9c%e6%a8%a1%e5%9e%8b">#</a>
+</h1>
+<h2 id="七层模型">
+  七层模型
+  <a class="anchor" href="#%e4%b8%83%e5%b1%82%e6%a8%a1%e5%9e%8b">#</a>
+</h2>
+<p>​		物理层、数据链路层、网络层、传输层、会话层、表示层、应用层</p>
+<h2 id="四层模型">
+  四层模型
+  <a class="anchor" href="#%e5%9b%9b%e5%b1%82%e6%a8%a1%e5%9e%8b">#</a>
+</h2>
+<p>​		数据链路层、网络层、传输层、应用层</p>
+<h2 id="arp">
+  ARP
+  <a class="anchor" href="#arp">#</a>
+</h2>
+<p>​		address resolution protocol, 地址解析协议 ,解析ip和mac地址映射关系</p>
+<h2 id="nat">
+  NAT
+  <a class="anchor" href="#nat">#</a>
+</h2>
+<p>​	net address translation , nat地址转换 , 转换ip地址为公网地址</p>
+<h2 id="四次握手">
+  四次握手
+  <a class="anchor" href="#%e5%9b%9b%e6%ac%a1%e6%8f%a1%e6%89%8b">#</a>
+</h2>
+<p>![image-20230706144230359](/Users/wuguangkuo/Library/Application Support/typora-user-images/image-20230706144230359.png)</p>
+<h2 id="问题-1">
+  问题
+  <a class="anchor" href="#%e9%97%ae%e9%a2%98-1">#</a>
+</h2>
+<ul>
+<li>如果已经建立了连接，但客户端出现了故障怎么办？</li>
+</ul>
+<p>​				服务端维持计时器, 每隔一段时间重试,超过一定次数,直接断开连接</p>
+<ul>
+<li>
+<p>如果第二次挥手时服务器的ACK没有送达客户端，会怎样？</p>
+<p>客户端没有收到ACK确认，会重新发送FIN请求。</p>
+</li>
+<li>
+<p>客户端TIME_WAIT状态的意义是什么？</p>
+<p>第四次挥手时，客户端发送给服务器的ACK有可能丢失，TIME_WAIT状态就是用来重发可能丢失的ACK报文。如果Server没有收到ACK，就会重发FIN.</p>
+</li>
+</ul>
+<h2 id="缓存机制">
+  缓存机制
+  <a class="anchor" href="#%e7%bc%93%e5%ad%98%e6%9c%ba%e5%88%b6">#</a>
+</h2>
+<ul>
+<li>强制缓存, 通过返回请求头的,cache-control, expire字段进行确认</li>
+<li>协商缓存, 通过返回的etag,last-modify的返回头进行确认,下次访问的时候(请求头If-Modified-Since,I<code>f-None-Match</code> )带上对应etag和最后修改的信息, 服务进行判断,304</li>
+</ul>
+<h2 id="https工作原理">
+  HTTPS工作原理
+  <a class="anchor" href="#https%e5%b7%a5%e4%bd%9c%e5%8e%9f%e7%90%86">#</a>
+</h2>
+<p>一、首先HTTP请求服务端生成证书，客户端对证书的有效期、合法性、域名是否与请求的域名一致、证书的公钥（RSA加密）等进行校验；</p>
+<p>二、客户端生成会话密钥：客户端使用服务器的公钥（从证书中获取）来加密生成一个会话密钥，该密钥将用于双方进行对称加密通信。这样客户端可以确保只有持有服务器私钥的服务器能够解密会话密钥。</p>
+<p>三、握手阶段：客户端将会话密钥加密并发送给服务器。服务器使用私钥解密会话密钥，然后双方就可以使用该会话密钥进行加密和解密通信。</p>
+<p>四、客户端和服务器之间的后续通信和数据传输都是使用会话密钥进行加密和解密的，确保数据的机密性和完整性。</p>
+<h1 id="网络模型reactor">
+  网络模型(reactor)
+  <a class="anchor" href="#%e7%bd%91%e7%bb%9c%e6%a8%a1%e5%9e%8breactor">#</a>
+</h1>
+<h2 id="单线程reator单线程">
+  单线程reator、单线程
+  <a class="anchor" href="#%e5%8d%95%e7%ba%bf%e7%a8%8breator%e5%8d%95%e7%ba%bf%e7%a8%8b">#</a>
+</h2>
+<h2 id="单线程reactor多线程">
+  单线程reactor、多线程
+  <a class="anchor" href="#%e5%8d%95%e7%ba%bf%e7%a8%8breactor%e5%a4%9a%e7%ba%bf%e7%a8%8b">#</a>
+</h2>
+<h2 id="多线程reactor-单线程不常用">
+  多线程reactor 、单线程,不常用
+  <a class="anchor" href="#%e5%a4%9a%e7%ba%bf%e7%a8%8breactor-%e5%8d%95%e7%ba%bf%e7%a8%8b%e4%b8%8d%e5%b8%b8%e7%94%a8">#</a>
+</h2>
+<h2 id="多线程reator多线程">
+  多线程reator、多线程
+  <a class="anchor" href="#%e5%a4%9a%e7%ba%bf%e7%a8%8breator%e5%a4%9a%e7%ba%bf%e7%a8%8b">#</a>
+</h2>
+<h2 id="ouath-协议工作流程">
+  ouath 协议工作流程
+  <a class="anchor" href="#ouath-%e5%8d%8f%e8%ae%ae%e5%b7%a5%e4%bd%9c%e6%b5%81%e7%a8%8b">#</a>
+</h2>
+<ol>
+<li>注册应用程序：客户端向授权服务器注册，并获得客户端ID和客户端密钥。</li>
+<li>请求授权：客户端跳转到授权服务器，并请求访问用户受保护资源的授权。请求中包含客户端ID、请求访问的范围和重定向URL等信息。</li>
+<li>用户授权：用户在授权服务器上登录，并选择是否授权客户端访问其受保护资源。</li>
+<li>授权颁发：授权服务器向客户端颁发授权令牌（Access Token）。授权令牌将用于后续的资源请求。</li>
+<li>访问受保护资源：客户端将授权令牌附加到资源请求中，并发送给资源服务器。</li>
+<li>验证授权：资源服务器验证授权令牌的有效性，并根据用户的授权范围来限制访问。</li>
+<li>提供受保护资源：如果授权有效，则资源服务器提供所请求的受保护资源给客户端。</li>
+</ol>
+<h2 id="imghttpspic2zhimgcom80v2-8d626a3f8af30d7c36ebadf2894af571_1440wwebp">
+  <img src="https://pic2.zhimg.com/80/v2-8d626a3f8af30d7c36ebadf2894af571_1440w.webp" alt="img" />
+  <a class="anchor" href="#imghttpspic2zhimgcom80v2-8d626a3f8af30d7c36ebadf2894af571_1440wwebp">#</a>
+</h2>
+<h1 id="springcloud组件">
+  springcloud组件
+  <a class="anchor" href="#springcloud%e7%bb%84%e4%bb%b6">#</a>
+</h1>
+<h2 id="spring-cloud-eureka">
+  Spring Cloud Eureka：
+  <a class="anchor" href="#spring-cloud-eureka">#</a>
+</h2>
+<p>​			服务注册与发现</p>
+<p>Eureka的自我保护机制: 默认情况下，如果Eureka Service在一定时间内没有接收到某个微服务的心跳，Eureka Service会进入自我保护模式，在该模式下Eureka Service会保护服务注册表中的信息，不在删除注册表中的数据，当网络故障恢复后，Eureka Servic节点会自动退出自我保护模式</p>
+<pre><code>	eureka 和 zookeeper区别?
+</code></pre>
+<p>​			1.ZooKeeper中的节点服务挂了就要选举在选举期间注册服务瘫痪,虽然服务最终会恢复,但是选举期间不可用的，选举就是改微服务做了集群，必须有一台主其他的都是从</p>
+<ol start="2">
+<li>Eureka各个节点是平等关系,服务器挂了没关系，只要有一台Eureka就可以保证服务可用，数据都是最新的。如果查询到的数据并不是最新的，就是因为Eureka的自我保护模式导致的</li>
+<li>ZooKeeper保证的是CP，Eureka保证的是AP</li>
+</ol>
+<p>Spring Cloud Zuul：服务网关</p>
+<p>Spring Cloud Ribbon：客户端负载均衡</p>
+<p>Spring Cloud Feign：声明性的Web服务客户端</p>
+<h2 id="spring-cloud-hystrix断路器">
+  Spring Cloud Hystrix：断路器
+  <a class="anchor" href="#spring-cloud-hystrix%e6%96%ad%e8%b7%af%e5%99%a8">#</a>
+</h2>
+<ul>
+<li>
+<p>服务降级：当客户端请求服务器端的时候，防止客户端一直等待，不会处理业务逻辑代码，直接返回一个友好的提示给客户端。实战:  Hystrix实现服务降级的功能是通过重写HystrixCommand中的getFallback()方法，当Hystrix的run方法或construct执行发生错误时转而执行getFallback()方法。</p>
+</li>
+<li>
+<p>服务熔断是在服务降级的基础上更直接的一种保护方式，当在一个统计时间范围内的请求失败数量达到设定值（requestVolumeThreshold）或当前的请求错误率达到设定的错误率阈值（errorThresholdPercentage）时开启断路，之后的请求直接走fallback方法，在设定时间（sleepWindowInMilliseconds）后尝试恢复。</p>
+</li>
+<li>
+<p>服务隔离就是Hystrix为隔离的服务开启一个独立的线程池，这样在高并发的情况下不会影响其他服务。服务隔离有线程池和信号量两种实现方式，一般使用线程池方式。</p>
+</li>
+</ul>
+<p>Spring Cloud Config：分布式统一配置管理</p>
+<p>限流器: guava ratelimit 、resilience4j、 sentinl限流</p>
+<h1 id="elasticsearch">
+  elasticsearch
+  <a class="anchor" href="#elasticsearch">#</a>
+</h1>
+<h2 id="分片规划">
+  分片规划
+  <a class="anchor" href="#%e5%88%86%e7%89%87%e8%a7%84%e5%88%92">#</a>
+</h2>
+<p>​	每个分片容量20G-50G左右 ,</p>
+<p>​	 账号库12亿数据 ,线上28个节点, 3T数据,76个分片,</p>
+<h2 id="redis-1">
+  Redis
+  <a class="anchor" href="#redis-1">#</a>
+</h2>
+<p>Redis 集群,  线上分片24个,4GB ,1个副本, 规划容量100G</p>
+<h2 id="homo-redis">
+  homo redis
+  <a class="anchor" href="#homo-redis">#</a>
+</h2>
+<p>16个分片共 32g ,1副本,规划容量80G</p>
+<h1 id="clickhouse">
+  clickhouse
+  <a class="anchor" href="#clickhouse">#</a>
+</h1>
+<p>线上40个节点 ,128G内存,96c, 总容量500T, 已使用400T,</p>
+<h1 id="db">
+  db
+  <a class="anchor" href="#db">#</a>
+</h1>
+<p>10个数据库, 然后分表,每个库60张表,</p>
+<h1 id="算法">
+  算法
+  <a class="anchor" href="#%e7%ae%97%e6%b3%95">#</a>
+</h1>
+<p>java 常用函数</p>
+<p>new ArrayList(); // 构造函数里面直接加数组</p>
+<h1 id="jvm">
+  jvm
+  <a class="anchor" href="#jvm">#</a>
+</h1>
+<p>常用工具</p>
+<ul>
+<li>jps 查看进程</li>
+<li>jinfo 运行环境信息,classpath、javasystem 信息</li>
+<li>jstat 监控各种运行状态</li>
+<li>jstack 线程运行情况 (死锁)</li>
+<li>jmap 查看物理内存使用情况</li>
+</ul>
+<p>GC:</p>
+<ul>
+<li>
+<p>minor gc 新生代</p>
+</li>
+<li>
+<p>major gc  老年代</p>
+</li>
+<li>
+<p>fullgc system.gc 、方区空间不足</p>
+</li>
+</ul>
+<p>HotSpot虚拟机中，Eden区和Survivor区的默认比例为<strong>8:1:1</strong>，即-XX:SurvivorRatio=8， 其中Survivor分为From Survivor和ToSurvivor，因此Eden此时占新生代空间的80%</p>
+<h2 id="内存泄漏">
+  内存泄漏
+  <a class="anchor" href="#%e5%86%85%e5%ad%98%e6%b3%84%e6%bc%8f">#</a>
+</h2>
+<p>数据无法回收 ,ThreadLocal</p>
+<h2 id="内存溢出">
+  内存溢出
+  <a class="anchor" href="#%e5%86%85%e5%ad%98%e6%ba%a2%e5%87%ba">#</a>
+</h2>
+<p>分配数据时,内存不够使用</p>
+<h2 id="问题排查">
+  问题排查
+  <a class="anchor" href="#%e9%97%ae%e9%a2%98%e6%8e%92%e6%9f%a5">#</a>
+</h2>
+<ul>
+<li>
+<p>jps 查看java端口</p>
+</li>
+<li>
+<p>top  -H -p {进程id} 查看进程对应的线程使用情况</p>
+</li>
+<li>
+<p>jstack  -l {pid} |grep {printf &ldquo;0x%x&rdquo; [线程id]}</p>
+</li>
+</ul>
+<h2 id="mysql">
+  mysql
+  <a class="anchor" href="#mysql">#</a>
+</h2>
+<h2 id="执行过程">
+  执行过程
+  <a class="anchor" href="#%e6%89%a7%e8%a1%8c%e8%bf%87%e7%a8%8b">#</a>
+</h2>
+<p>连接器、分析器、优化器、执行器</p>
+<p>存储引擎</p>
+<h2 id="查询缓存">
+  查询缓存
+  <a class="anchor" href="#%e6%9f%a5%e8%af%a2%e7%bc%93%e5%ad%98">#</a>
+</h2>
+<p>8.0之后去除, 基于表的查询缓存, 表有更新,整个缓存全部删除</p>
+<h1 id="java">
+  java
+  <a class="anchor" href="#java">#</a>
+</h1>
+<h2 id="动态加载类框架">
+  动态加载类框架
+  <a class="anchor" href="#%e5%8a%a8%e6%80%81%e5%8a%a0%e8%bd%bd%e7%b1%bb%e6%a1%86%e6%9e%b6">#</a>
+</h2>
+<ul>
+<li>reflect</li>
+<li>aop动态代理</li>
+<li>Java Instrumentation API 增强字节码 , 动态修改、添加、删除模块</li>
+</ul>
+<h1 id="go-1">
+  GO
+  <a class="anchor" href="#go-1">#</a>
+</h1>
+<p>原文链接:    <a href="https://juejin.cn/post/7226153290051141692">https://juejin.cn/post/7226153290051141692</a></p>
+<h2 id="slice">
+  slice
+  <a class="anchor" href="#slice">#</a>
+</h2>
+<p>数组、len、cap 结构</p>
+<p>扩容2倍,  ,cap&gt;1024扩容 1.25倍</p>
+<p>java arraylist 扩容是1.5倍, 扩容之后任不够使用,扩容至所需的容量</p>
+<h2 id="map">
+  Map:
+  <a class="anchor" href="#map">#</a>
+</h2>
+<p>底层基于 hmap 实现 ,hamp是一个bucket数组结构, 数组里面的每一个bmap是一个bmap结构,每个桶中保存了8个kv对，如果8个满了，又来了一个key落在了这个桶里，会使用overflow连接下一个桶(溢出桶)</p>
+<p>扩容: 扩容条件</p>
+<p>1、负载因&gt; 6.5 ,  count/bucket数组&gt; 6.5</p>
+<p>2、溢出桶过多, 当B&lt; 15时 ,溢出桶 &gt; 2^B</p>
+<p>B&gt;15时, 溢出桶&gt; 2^15</p>
+<p>扩容方式:</p>
+<p>等量扩容: (缩容)</p>
+<p>2倍扩容</p>
+<h2 id="rehash">
+  rehash
+  <a class="anchor" href="#rehash">#</a>
+</h2>
+<p>将新数组的容量设置为旧数组的两倍或一半，并且将哈希表的增量计数器加一。</p>
+<p>在对哈希表进行操作时，如果发现增量计数器的值达到了一个阈值，就会开始进行增量式 rehash 操作，将一部分元素从旧数组中复制到新数组中，并且重新计算这些元素的哈希值。</p>
+<p>在完成一次增量式 rehash 操作后，会将哈希表的增量计数器清零。</p>
+<h2 id="gmp模型">
+  GMP模型:
+  <a class="anchor" href="#gmp%e6%a8%a1%e5%9e%8b">#</a>
+</h2>
+<h2 id="spring-为什么需要三级缓存解决循环依赖问题">
+  Spring 为什么需要三级缓存解决循环依赖问题
+  <a class="anchor" href="#spring-%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e4%b8%89%e7%ba%a7%e7%bc%93%e5%ad%98%e8%a7%a3%e5%86%b3%e5%be%aa%e7%8e%af%e4%be%9d%e8%b5%96%e9%97%ae%e9%a2%98">#</a>
+</h2>
+<p>实例化和属性设置 分开 , 会涉及到一些代理对象的使用 , 这些是放在第三级缓存里的 , 如果只有两级缓存, 没办法 区分 bean 对象处理属性设置还是bean 代理</p>
+<h2 id="springboot启动流程">
+  springboot启动流程
+  <a class="anchor" href="#springboot%e5%90%af%e5%8a%a8%e6%b5%81%e7%a8%8b">#</a>
+</h2>
+<p>SpringBootApplication 注解 ,包含 componetscan注解,启动时,会自动拉取jar下的metainfo/spring.factory文件中定义的bean信息, 做好自动装配 , @SpringBootConfiguration注解</p>
+<h2 id="explain语句">
+  explain语句
+  <a class="anchor" href="#explain%e8%af%ad%e5%8f%a5">#</a>
+</h2>
+<p>type :ALL-&gt;const(主键或者唯一索引)-&gt; eq_ref(主键或者唯一索引)-&gt;ref(普通索引)</p>
+<p>keys : 实际走的索引</p>
+<p>possible_keys : 可能用到的索引</p>
+<h2 id="三级缓存">
+  三级缓存
+  <a class="anchor" href="#%e4%b8%89%e7%ba%a7%e7%bc%93%e5%ad%98">#</a>
+</h2>
+<p>三级缓存存在的原因主要原因有两个，一是因为AOP，二是循环依赖。如果没有Spring AOP和循环依赖，那么就不需要使用三级缓存</p>
+<ul>
+<li>一级缓存存放完全实力化的bean</li>
+<li>二级缓存存放还没有完全实例化的bean</li>
+<li>三级缓存存放需要aop功能等代理生成的bean</li>
+</ul>
+<p>如果没有AOP的话确实可以两级缓存就可以解决循环依赖的问题，如果加上AOP，两级缓存是无法解决的，不可能每次执行singleFactory.getObject()方法都给我产生一个新的代理对象，所以还要借助另外一个缓存来保存产生的代理对象</p>
+<h2 id="gc">
+  gc
+  <a class="anchor" href="#gc">#</a>
+</h2>
+<p>GC 耗时增大、线程 Block 增多、慢查询增多、CPU 负载高等四个表象，如何判断哪个是根因</p>
+<p>入侵检测、ddos 、业务安全、 数据安全、 网络安全</p>
+<p>​</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#reentrantlock">ReentrantLock</a></li>
+    <li><a href="#semaphore">Semaphore</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#offset管理">offset管理</a></li>
+    <li><a href="#时间轮">时间轮</a></li>
+    <li><a href="#io模型">io模型</a></li>
+    <li><a href="#高性能写">高性能写</a></li>
+    <li><a href="#高性能读">高性能读</a></li>
+    <li><a href="#controller作用">controller作用</a></li>
+    <li><a href="#rebalance">rebalance</a></li>
+    <li><a href="#消费策略">消费策略</a></li>
+    <li><a href="#集群规划">集群规划</a></li>
+    <li><a href="#问题">问题</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#slice底层实现">Slice底层实现</a></li>
+    <li><a href="#map-底层实现">Map 底层实现</a></li>
+    <li><a href="#接口">接口</a></li>
+    <li><a href="#gmp">GMP</a></li>
+    <li><a href="#管道">管道</a></li>
+    <li><a href="#协程">协程</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#各版本区别">各版本区别</a></li>
+    <li><a href="#长链接">长链接</a></li>
+    <li><a href="#短链接">短链接</a></li>
+    <li><a href="#长轮询">长轮询</a></li>
+    <li><a href="#短轮询">短轮询</a></li>
+    <li><a href="#配置中心长轮询">配置中心长轮询</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#threadlocal">ThreadLocal</a></li>
+    <li><a href="#redis">redis</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#七层模型">七层模型</a></li>
+    <li><a href="#四层模型">四层模型</a></li>
+    <li><a href="#arp">ARP</a></li>
+    <li><a href="#nat">NAT</a></li>
+    <li><a href="#四次握手">四次握手</a></li>
+    <li><a href="#问题-1">问题</a></li>
+    <li><a href="#缓存机制">缓存机制</a></li>
+    <li><a href="#https工作原理">HTTPS工作原理</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#单线程reator单线程">单线程reator、单线程</a></li>
+    <li><a href="#单线程reactor多线程">单线程reactor、多线程</a></li>
+    <li><a href="#多线程reactor-单线程不常用">多线程reactor 、单线程,不常用</a></li>
+    <li><a href="#多线程reator多线程">多线程reator、多线程</a></li>
+    <li><a href="#ouath-协议工作流程">ouath 协议工作流程</a></li>
+    <li><a href="#imghttpspic2zhimgcom80v2-8d626a3f8af30d7c36ebadf2894af571_1440wwebp"><img src="https://pic2.zhimg.com/80/v2-8d626a3f8af30d7c36ebadf2894af571_1440w.webp" alt="img"></a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#spring-cloud-eureka">Spring Cloud Eureka：</a></li>
+    <li><a href="#spring-cloud-hystrix断路器">Spring Cloud Hystrix：断路器</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#分片规划">分片规划</a></li>
+    <li><a href="#redis-1">Redis</a></li>
+    <li><a href="#homo-redis">homo redis</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#内存泄漏">内存泄漏</a></li>
+    <li><a href="#内存溢出">内存溢出</a></li>
+    <li><a href="#问题排查">问题排查</a></li>
+    <li><a href="#mysql">mysql</a></li>
+    <li><a href="#执行过程">执行过程</a></li>
+    <li><a href="#查询缓存">查询缓存</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#动态加载类框架">动态加载类框架</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#slice">slice</a></li>
+    <li><a href="#map">Map:</a></li>
+    <li><a href="#rehash">rehash</a></li>
+    <li><a href="#gmp模型">GMP模型:</a></li>
+    <li><a href="#spring-为什么需要三级缓存解决循环依赖问题">Spring 为什么需要三级缓存解决循环依赖问题</a></li>
+    <li><a href="#springboot启动流程">springboot启动流程</a></li>
+    <li><a href="#explain语句">explain语句</a></li>
+    <li><a href="#三级缓存">三级缓存</a></li>
+    <li><a href="#gc">gc</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

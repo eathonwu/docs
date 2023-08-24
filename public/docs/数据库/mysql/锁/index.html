@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="概览 # 全局锁 # 示例:
+flush tables with read lock --加锁 unlock tables --解锁 用途: 全库备份,期间不允许数据修改
+表级别锁 # 1.表锁 # lock tables t_student read; --表级别的共享锁，也就是读锁； unlock tables --解锁 lock tables t_stuent write; -- 表级别的独占锁，也就是写锁； unlock tables --解锁 2.元数据锁 # 再来说说元数据锁（MDL）。
+我们不需要显示的使用 MDL，因为当我们对数据库表进行操作时，会自动给这个表加上 MDL：
+对一张表进行 CRUD 操作时，加的是 MDL 读锁； 对一张表做结构变更操作的时候，加的是 MDL 写锁； MDL 是为了保证当用户对表执行 CRUD 操作时，防止其他线程对这个表结构做了变更。
+当有线程在执行 select 语句（ 加 MDL 读锁）的期间，如果有其他线程要更改该表的结构（ 申请 MDL 写锁），那么将会被阻塞，直到执行完 select 语句（ 释放 MDL 读锁）。">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="" />
+<meta property="og:description" content="概览 # 全局锁 # 示例:
+flush tables with read lock --加锁 unlock tables --解锁 用途: 全库备份,期间不允许数据修改
+表级别锁 # 1.表锁 # lock tables t_student read; --表级别的共享锁，也就是读锁； unlock tables --解锁 lock tables t_stuent write; -- 表级别的独占锁，也就是写锁； unlock tables --解锁 2.元数据锁 # 再来说说元数据锁（MDL）。
+我们不需要显示的使用 MDL，因为当我们对数据库表进行操作时，会自动给这个表加上 MDL：
+对一张表进行 CRUD 操作时，加的是 MDL 读锁； 对一张表做结构变更操作的时候，加的是 MDL 写锁； MDL 是为了保证当用户对表执行 CRUD 操作时，防止其他线程对这个表结构做了变更。
+当有线程在执行 select 语句（ 加 MDL 读锁）的期间，如果有其他线程要更改该表的结构（ 申请 MDL 写锁），那么将会被阻塞，直到执行完 select 语句（ 释放 MDL 读锁）。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E9%94%81/" /><meta property="article:section" content="docs" />
+
+
+<title>锁 | My New Hugo Site</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/book.min.c58292d36b18b675680ab9baea2029204537b839ea72f258746ec0f32ce8d6c8.css" integrity="sha256-xYKS02sYtnVoCrm66iApIEU3uDnqcvJYdG7A8yzo1sg=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.5f826a12543ba6a5ab17c6b2d774177bd99cb98661f9f7bf5a9b2a3a4a496528.js" integrity="sha256-X4JqElQ7pqWrF8ay13QXe9mcuYZh&#43;fe/WpsqOkpJZSg=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>My New Hugo Site</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>go语言基础</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/gmp%E6%A8%A1%E5%9E%8B/" class="">Gmp模型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/slice/" class="">Slice</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/%E5%8F%8D%E5%B0%84/" class="">反射</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/" class="">java基础</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/juc/" class="">Juc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/jvm/" class="">Jvm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/lambda/" class="">Lambda</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/skiplist/" class="">Skiplist</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/volatile/" class="">Volatile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="">基本数据类型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="">线程池</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/%E9%9B%86%E5%90%88/" class="">集合</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>其他</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/c%E8%AF%AD%E8%A8%80/" class="">其他</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E5%85%B6%E4%BB%96/" class="">其他</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E6%9E%B6%E6%9E%84%E5%9F%BA%E7%A1%80/" class="">架构基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/" class="">疑难杂症</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>分布式</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/raft%E5%8D%8F%E8%AE%AE/" class="">分布式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/gossip%E5%8D%8F%E8%AE%AE/" class="">Gossip协议</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/paxos/" class="">Paxos</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/zab%E5%8D%8F%E8%AE%AE/" class="">Zab协议</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BA%8B%E5%8A%A1/" class="">事务</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>数据库</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>elasticsearch</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/elasticsearch/%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87/" class="">数据分片</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/elasticsearch/%E8%B0%83%E4%BC%98/" class="">调优</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/" class="">clickhosue</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/sql-join/" class="">SQL Join</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/%E7%89%A9%E5%8C%96%E8%A7%86%E5%9B%BE/" class="">物化视图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/%E8%BF%90%E7%BB%B4%E7%9B%B8%E5%85%B3/" class="">运维相关</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>mysql</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E7%B4%A2%E5%BC%95/" class="">索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/mvcc%E6%A8%A1%E5%9E%8B/" class="">Mvcc模型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E4%BA%8B%E5%8A%A1/" class="">事务</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E9%94%81/" class="active">锁</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>redis</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="">分布式锁</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E5%8F%8C%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/" class="">双写一致性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E6%9E%B6%E6%9E%84/" class="">架构</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>算法</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="">动态规划</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E7%AE%97%E6%B3%95/%E5%9B%9E%E6%BA%AF/" class="">回溯</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E7%AE%97%E6%B3%95/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="">贪心算法</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/" class="">Linux</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/nvim/" class="">Nvim</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="">常用命令</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%9E%B6%E6%9E%84/" class="">架构</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%9E%B6%E6%9E%84/%E5%BE%AE%E4%BF%A1%E6%9E%B6%E6%9E%84/" class="">微信架构</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>锁</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1表锁">1.表锁</a></li>
+    <li><a href="#2元数据锁">2.元数据锁</a></li>
+    <li><a href="#3意向锁">3.意向锁</a></li>
+    <li><a href="#4auto-inc-锁">4.AUTO-INC 锁</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#记录锁record-lock">记录锁record lock</a></li>
+    <li><a href="#间隙锁gap-lock">间隙锁gap lock</a></li>
+    <li><a href="#next-key-lock">next-key lock</a></li>
+    <li><a href="#插入意向锁">插入意向锁</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="概览">
+  概览
+  <a class="anchor" href="#%e6%a6%82%e8%a7%88">#</a>
+</h1>
+<p><img src="https://cdn.xiaolincoding.com//mysql/other/1e37f6994ef44714aba03b8046b1ace2.png" alt="img" /></p>
+<h1 id="全局锁">
+  全局锁
+  <a class="anchor" href="#%e5%85%a8%e5%b1%80%e9%94%81">#</a>
+</h1>
+<p>示例:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span> flush tables <span style="color:#66d9ef">with</span> <span style="color:#66d9ef">read</span> <span style="color:#66d9ef">lock</span> <span style="color:#75715e">--加锁
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span> unlock tables <span style="color:#75715e">--解锁 
+</span></span></span></code></pre></div><p>用途: 全库备份,期间不允许数据修改</p>
+<h1 id="表级别锁">
+  表级别锁
+  <a class="anchor" href="#%e8%a1%a8%e7%ba%a7%e5%88%ab%e9%94%81">#</a>
+</h1>
+<h2 id="1表锁">
+  1.表锁
+  <a class="anchor" href="#1%e8%a1%a8%e9%94%81">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">lock</span> tables t_student <span style="color:#66d9ef">read</span>; <span style="color:#75715e">--表级别的共享锁，也就是读锁；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>unlock tables <span style="color:#75715e">--解锁 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">lock</span> tables t_stuent <span style="color:#66d9ef">write</span>; <span style="color:#75715e">-- 表级别的独占锁，也就是写锁；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>unlock tables <span style="color:#75715e">--解锁 
+</span></span></span></code></pre></div><h2 id="2元数据锁">
+  2.元数据锁
+  <a class="anchor" href="#2%e5%85%83%e6%95%b0%e6%8d%ae%e9%94%81">#</a>
+</h2>
+<p>再来说说<strong>元数据锁</strong>（MDL）。</p>
+<p>我们不需要显示的使用 MDL，因为当我们对数据库表进行操作时，会自动给这个表加上 MDL：</p>
+<ul>
+<li>对一张表进行 CRUD 操作时，加的是 <strong>MDL 读锁</strong>；</li>
+<li>对一张表做结构变更操作的时候，加的是 <strong>MDL 写锁</strong>；</li>
+</ul>
+<p>MDL 是为了保证当用户对表执行 CRUD 操作时，防止其他线程对这个表结构做了变更。</p>
+<p>当有线程在执行 select 语句（ 加 MDL 读锁）的期间，如果有其他线程要更改该表的结构（ 申请 MDL 写锁），那么将会被阻塞，直到执行完 select 语句（ 释放 MDL 读锁）。</p>
+<p>反之，当有线程对表结构进行变更（ 加 MDL 写锁）的期间，如果有其他线程执行了 CRUD 操作（ 申请 MDL 读锁），那么就会被阻塞，直到表结构变更完成（ 释放 MDL 写锁）。</p>
+<p>MDL 是在事务提交后才会释放，这意味着<strong>事务执行期间，MDL 是一直持有的</strong>。</p>
+<h2 id="3意向锁">
+  3.意向锁
+  <a class="anchor" href="#3%e6%84%8f%e5%90%91%e9%94%81">#</a>
+</h2>
+<p>也就是，当执行插入、更新、删除操作，需要先对表加上「意向独占锁」，然后对该记录加独占锁。而普通的 select 是不会加行级锁的，普通的 select 语句是利用 MVCC 实现一致性读，是无锁的。</p>
+<p>意向共享锁和意向独占锁是表级锁，不会和行级的共享锁和独占锁发生冲突，而且意向锁之间也不会发生冲突，只会和共享表锁（*lock tables &hellip; read*）和独占表锁（*lock tables &hellip; write*）发生冲突。</p>
+<p><!-- raw HTML omitted --><strong>意向锁的目的是为了快速判断表里是否有记录被加锁</strong>。<!-- raw HTML omitted --></p>
+<h2 id="4auto-inc-锁">
+  4.AUTO-INC 锁
+  <a class="anchor" href="#4auto-inc-%e9%94%81">#</a>
+</h2>
+<p>里的主键通常都会设置成自增的，这是通过对主键字段声明 <code>AUTO_INCREMENT</code> 属性实现的。</p>
+<p>之后可以在插入数据时，可以不指定主键的值，数据库会自动给主键赋值递增的值，这主要是通过 <strong>AUTO-INC 锁</strong>实现的。</p>
+<p>AUTO-INC 锁是特殊的表锁机制，锁<strong>不是再一个事务提交后才释放，而是再执行完插入语句后就会立即释放</strong>。</p>
+<p><strong>在插入数据时，会加一个表级别的 AUTO-INC 锁</strong>，然后为被 <code>AUTO_INCREMENT</code> 修饰的字段赋值递增的值，等插入语句执行完成后，才会把 AUTO-INC 锁释放掉。</p>
+<p>那么，一个事务在持有 AUTO-INC 锁的过程中，其他事务的如果要向该表插入语句都会被阻塞，从而保证插入数据时，被 <code>AUTO_INCREMENT</code> 修饰的字段的值是连续递增的。</p>
+<p>但是， AUTO-INC 锁再对大量数据进行插入的时候，会影响插入性能，因为另一个事务中的插入会被阻塞。</p>
+<h1 id="行级锁">
+  行级锁
+  <a class="anchor" href="#%e8%a1%8c%e7%ba%a7%e9%94%81">#</a>
+</h1>
+<h2 id="记录锁record-lock">
+  记录锁record lock
+  <a class="anchor" href="#%e8%ae%b0%e5%bd%95%e9%94%81record-lock">#</a>
+</h2>
+<h2 id="间隙锁gap-lock">
+  间隙锁gap lock
+  <a class="anchor" href="#%e9%97%b4%e9%9a%99%e9%94%81gap-lock">#</a>
+</h2>
+<h2 id="next-key-lock">
+  next-key lock
+  <a class="anchor" href="#next-key-lock">#</a>
+</h2>
+<h2 id="插入意向锁">
+  插入意向锁
+  <a class="anchor" href="#%e6%8f%92%e5%85%a5%e6%84%8f%e5%90%91%e9%94%81">#</a>
+</h2>
+<p>一个事务在插入一条记录的时候，需要判断插入位置是否已被其他事务加了间隙锁（next-key lock 也包含间隙锁）。如果有的话，插入操作就会发生<strong>阻塞</strong>，直到拥有间隙锁的那个事务提交为止（释放间隙锁的时刻），在此期间会生成一个<strong>插入意向锁</strong>，表明有事务想在某个区间插入新记录，但是现在处于等待状态。</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1表锁">1.表锁</a></li>
+    <li><a href="#2元数据锁">2.元数据锁</a></li>
+    <li><a href="#3意向锁">3.意向锁</a></li>
+    <li><a href="#4auto-inc-锁">4.AUTO-INC 锁</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#记录锁record-lock">记录锁record lock</a></li>
+    <li><a href="#间隙锁gap-lock">间隙锁gap lock</a></li>
+    <li><a href="#next-key-lock">next-key lock</a></li>
+    <li><a href="#插入意向锁">插入意向锁</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

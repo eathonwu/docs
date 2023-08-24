@@ -7,6 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language><atom:link href="http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>索引</title>
+      <link>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E7%B4%A2%E5%BC%95/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E7%B4%A2%E5%BC%95/</guid>
+      <description>索引覆盖
+索引下推
+当你的查询语句的执行计划里，出现了 Extra 为 Using index condition，那么说明使用了索引下推的优化。</description>
+    </item>
+    
+    <item>
       <title></title>
       <link>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/mvcc%E6%A8%A1%E5%9E%8B/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -22,6 +33,20 @@
       
       <guid>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E4%BA%8B%E5%8A%A1/</guid>
       <description>TODO</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E9%94%81/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E9%94%81/</guid>
+      <description>概览 # 全局锁 # 示例:
+flush tables with read lock --加锁 unlock tables --解锁 用途: 全库备份,期间不允许数据修改
+表级别锁 # 1.表锁 # lock tables t_student read; --表级别的共享锁，也就是读锁； unlock tables --解锁 lock tables t_stuent write; -- 表级别的独占锁，也就是写锁； unlock tables --解锁 2.元数据锁 # 再来说说元数据锁（MDL）。
+我们不需要显示的使用 MDL，因为当我们对数据库表进行操作时，会自动给这个表加上 MDL：
+对一张表进行 CRUD 操作时，加的是 MDL 读锁； 对一张表做结构变更操作的时候，加的是 MDL 写锁； MDL 是为了保证当用户对表执行 CRUD 操作时，防止其他线程对这个表结构做了变更。
+当有线程在执行 select 语句（ 加 MDL 读锁）的期间，如果有其他线程要更改该表的结构（ 申请 MDL 写锁），那么将会被阻塞，直到执行完 select 语句（ 释放 MDL 读锁）。</description>
     </item>
     
   </channel>

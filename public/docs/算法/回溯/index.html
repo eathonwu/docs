@@ -3,10 +3,24 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="TODO">
+<meta name="description" content="TODO
+设计思路
+全局变量： 保存结果 参数设计： 递归函数的参数，是将上一次操作的合法状态当作下一次操作的初始位置。这里的参数，我理解为两种参数：状态变量和条件变量。（1）状态变量（state）就是最后结果（result）要保存的值；（2）条件变量就是决定搜索是否完毕或者合法的值。 完成条件： 完成条件是决定 状态变量和条件变量 在取什么值时可以判定整个搜索流程结束。搜索流程结束有两种含义： 搜索成功并保存结果 和 搜索失败并返回上一次状态。 递归过程： 传递当前状态给下一次递归进行搜索。 void backtrace(初始数据,中间数据存储, 结果数据 )
+结果数据要定义好 初始数据要根据需要取单个值或者原始数组 数组全排列:
+https://leetcode.cn/problems/permutations/solution/ newArr:=make([]int,len(arr))
+copy(newArr,arr) copy的时候需要指定length和cap
+leecode 题目 https://leetcode.cn/problems/combinations/submissions/
+func Combine(n int, k int) [][]int { var ret = make([][]int, 0) var backTrace func(start int, num int, retArr *[][]int, temp []int) backTrace = func(start int, num int, retArr *[][]int, temp []int) { if len(temp) == k { *retArr = append(*retArr, temp) return } if start &gt; n { return } //chose i copyTemp := make([]int, len(temp)) copy(copyTemp, temp) temp = append(temp, start) if start == 4 { fmt.">
 <meta name="theme-color" content="#FFFFFF">
 <meta name="color-scheme" content="light dark"><meta property="og:title" content="" />
-<meta property="og:description" content="TODO" />
+<meta property="og:description" content="TODO
+设计思路
+全局变量： 保存结果 参数设计： 递归函数的参数，是将上一次操作的合法状态当作下一次操作的初始位置。这里的参数，我理解为两种参数：状态变量和条件变量。（1）状态变量（state）就是最后结果（result）要保存的值；（2）条件变量就是决定搜索是否完毕或者合法的值。 完成条件： 完成条件是决定 状态变量和条件变量 在取什么值时可以判定整个搜索流程结束。搜索流程结束有两种含义： 搜索成功并保存结果 和 搜索失败并返回上一次状态。 递归过程： 传递当前状态给下一次递归进行搜索。 void backtrace(初始数据,中间数据存储, 结果数据 )
+结果数据要定义好 初始数据要根据需要取单个值或者原始数组 数组全排列:
+https://leetcode.cn/problems/permutations/solution/ newArr:=make([]int,len(arr))
+copy(newArr,arr) copy的时候需要指定length和cap
+leecode 题目 https://leetcode.cn/problems/combinations/submissions/
+func Combine(n int, k int) [][]int { var ret = make([][]int, 0) var backTrace func(start int, num int, retArr *[][]int, temp []int) backTrace = func(start int, num int, retArr *[][]int, temp []int) { if len(temp) == k { *retArr = append(*retArr, temp) return } if start &gt; n { return } //chose i copyTemp := make([]int, len(temp)) copy(copyTemp, temp) temp = append(temp, start) if start == 4 { fmt." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://example.org/docs/%E7%AE%97%E6%B3%95/%E5%9B%9E%E6%BA%AF/" /><meta property="article:section" content="docs" />
 
@@ -16,7 +30,7 @@
 <link rel="icon" href="/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/book.min.c58292d36b18b675680ab9baea2029204537b839ea72f258746ec0f32ce8d6c8.css" integrity="sha256-xYKS02sYtnVoCrm66iApIEU3uDnqcvJYdG7A8yzo1sg=" crossorigin="anonymous">
   <script defer src="/flexsearch.min.js"></script>
-  <script defer src="/en.search.min.8c4912e29523d66f8911a6d25dda355256e4831cf98a61759b785a7fd112b722.js" integrity="sha256-jEkS4pUj1m&#43;JEabSXdo1Ulbkgxz5imF1m3haf9EStyI=" crossorigin="anonymous"></script>
+  <script defer src="/en.search.min.5f826a12543ba6a5ab17c6b2d774177bd99cb98661f9f7bf5a9b2a3a4a496528.js" integrity="sha256-X4JqElQ7pqWrF8ay13QXe9mcuYZh&#43;fe/WpsqOkpJZSg=" crossorigin="anonymous"></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -94,6 +108,19 @@ https://github.com/alex-shpak/hugo-book
   
 
   
+    <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/slice/" class="">Slice</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
     <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/%E5%8F%8D%E5%B0%84/" class="">反射</a>
   
 
@@ -112,11 +139,24 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <span>java基础</span>
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/" class="">java基础</a>
   
 
           
   <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/juc/" class="">Juc</a>
+  
+
+        </li>
+      
     
       
         <li>
@@ -151,6 +191,45 @@ https://github.com/alex-shpak/hugo-book
   
 
   
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/skiplist/" class="">Skiplist</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/volatile/" class="">Volatile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="">基本数据类型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
     <a href="/docs/java%E5%9F%BA%E7%A1%80/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="">线程池</a>
   
 
@@ -165,6 +244,176 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="/docs/java%E5%9F%BA%E7%A1%80/%E9%9B%86%E5%90%88/" class="">集合</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>其他</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/c%E8%AF%AD%E8%A8%80/" class="">其他</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E5%85%B6%E4%BB%96/" class="">其他</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E6%9E%B6%E6%9E%84%E5%9F%BA%E7%A1%80/" class="">架构基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/" class="">疑难杂症</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>分布式</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/raft%E5%8D%8F%E8%AE%AE/" class="">分布式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/gossip%E5%8D%8F%E8%AE%AE/" class="">Gossip协议</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/paxos/" class="">Paxos</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/zab%E5%8D%8F%E8%AE%AE/" class="">Zab协议</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BA%8B%E5%8A%A1/" class="">事务</a>
   
 
         </li>
@@ -311,6 +560,19 @@ https://github.com/alex-shpak/hugo-book
   
 
   
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E7%B4%A2%E5%BC%95/" class="">索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
     <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/mvcc%E6%A8%A1%E5%9E%8B/" class="">Mvcc模型</a>
   
 
@@ -325,6 +587,19 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E4%BA%8B%E5%8A%A1/" class="">事务</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E9%94%81/" class="">锁</a>
   
 
         </li>
@@ -347,6 +622,32 @@ https://github.com/alex-shpak/hugo-book
 
           
   <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="">分布式锁</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E5%8F%8C%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/" class="">双写一致性</a>
+  
+
+        </li>
+      
     
       
         <li>
@@ -437,7 +738,51 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <span>架构</span>
+    <a href="/docs/linux/" class="">Linux</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/nvim/" class="">Nvim</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="">常用命令</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%9E%B6%E6%9E%84/" class="">架构</a>
   
 
           
@@ -523,7 +868,55 @@ https://github.com/alex-shpak/hugo-book
       
       
   <article class="markdown"><p>TODO</p>
-</article>
+<p>设计思路</p>
+<ol>
+<li><strong>全局变量</strong>： 保存结果</li>
+<li><strong>参数设计</strong>： 递归函数的参数，是将上一次操作的合法状态当作下一次操作的初始位置。这里的参数，我理解为两种参数：<strong>状态变量</strong>和<strong>条件变量</strong>。（1）状态变量（state）就是最后结果（result）要保存的值；（2）条件变量就是决定搜索是否完毕或者合法的值。</li>
+<li><strong>完成条件</strong>： 完成条件是决定 状态变量和条件变量 在取什么值时可以判定整个搜索流程结束。搜索流程结束有两种含义： <strong>搜索成功</strong>并保存结果 和 <strong>搜索失败</strong>并返回上一次状态。</li>
+<li><strong>递归过程</strong>： 传递当前状态给下一次递归进行搜索。</li>
+</ol>
+<p>void  backtrace(初始数据,中间数据存储, 结果数据 )</p>
+<ul>
+<li>结果数据要定义好</li>
+<li>初始数据要根据需要取单个值或者原始数组</li>
+</ul>
+<p>数组全排列:</p>
+<ul>
+<li><a href="https://leetcode.cn/problems/permutations/solution/">https://leetcode.cn/problems/permutations/solution/</a></li>
+</ul>
+<p>newArr:=make([]int,len(arr))</p>
+<p>copy(newArr,arr) copy的时候需要指定length和cap</p>
+<p>leecode 题目 <a href="https://leetcode.cn/problems/combinations/submissions/">https://leetcode.cn/problems/combinations/submissions/</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Combine</span>(<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">k</span> <span style="color:#66d9ef">int</span>) [][]<span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">ret</span> = make([][]<span style="color:#66d9ef">int</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">backTrace</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">start</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">num</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">retArr</span> <span style="color:#f92672">*</span>[][]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">temp</span> []<span style="color:#66d9ef">int</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">backTrace</span> = <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">start</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">num</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">retArr</span> <span style="color:#f92672">*</span>[][]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">temp</span> []<span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">temp</span>) <span style="color:#f92672">==</span> <span style="color:#a6e22e">k</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#f92672">*</span><span style="color:#a6e22e">retArr</span> = append(<span style="color:#f92672">*</span><span style="color:#a6e22e">retArr</span>, <span style="color:#a6e22e">temp</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">start</span> &gt; <span style="color:#a6e22e">n</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//chose i
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">copyTemp</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, len(<span style="color:#a6e22e">temp</span>))
+</span></span><span style="display:flex;"><span>		copy(<span style="color:#a6e22e">copyTemp</span>, <span style="color:#a6e22e">temp</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">temp</span> = append(<span style="color:#a6e22e">temp</span>, <span style="color:#a6e22e">start</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">start</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">4</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">start</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">backTrace</span>(<span style="color:#a6e22e">start</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">num</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">retArr</span>, <span style="color:#a6e22e">temp</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// not chose i
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">backTrace</span>(<span style="color:#a6e22e">start</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">num</span>, <span style="color:#a6e22e">retArr</span>, <span style="color:#a6e22e">copyTemp</span>) <span style="color:#75715e">// 从第一次选择和不选择的情况,已经确定了后面的所有情况
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//for i := 1; i &lt;= n; i++ {
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">backTrace</span>(<span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">k</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">ret</span>, <span style="color:#66d9ef">nil</span>) <span style="color:#75715e">//这里注意不要用外层for
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#75715e">//}
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ret</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></article>
  
       
 

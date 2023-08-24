@@ -19,7 +19,7 @@ join # 所有的join 操作基本范式都是
 ​	join table3 on table1.xxx=table3.xxx
 ​	join table4 on table2.xxx=table4.xxx
 不允许先查询 再进行join,错误查询示例
-select * from table_a where age=12 (inner) join table_b on table_a.id =table_b.id left joni table_c on table a.id=table_c.id where table_a.name=&amp;#39;xxxx&amp;#34; (innser)join操作 # ​	内连接,去两个表on 交集
+select * from table_a where age=12 (inner) join table_b on table_a.id =table_b.id left joni table_c on table a.id=table_c.id where table_a.name=&amp;#39;xxxx&amp;#34; (inner)join操作 # ​	内连接,去两个表on 交集
 select * from table_a (inner) join table_b on table_a.id =table_b.id where table_a.name=&amp;#39;&amp;#39;xxxx&amp;#34; ​
 Left join # 左边为空时,会导致不会查到任何数据
 左连接,取左表所有

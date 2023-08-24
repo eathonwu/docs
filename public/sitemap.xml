@@ -14,21 +14,67 @@
   </url><url>
     <loc>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/</loc>
   </url><url>
+    <loc>http://example.org/docs/%E5%85%B6%E4%BB%96/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E5%85%B6%E4%BB%96/c%E8%AF%AD%E8%A8%80/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/raft%E5%8D%8F%E8%AE%AE/</loc>
+  </url><url>
     <loc>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
   </url><url>
     <loc>http://example.org/docs/%E7%AE%97%E6%B3%95/</loc>
   </url><url>
+    <loc>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E7%B4%A2%E5%BC%95/</loc>
+  </url><url>
     <loc>http://example.org/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/gmp%E6%A8%A1%E5%9E%8B/</loc>
   </url><url>
+    <loc>http://example.org/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/slice/</loc>
+  </url><url>
     <loc>http://example.org/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/%E5%8F%8D%E5%B0%84/</loc>
+  </url><url>
+    <loc>http://example.org/docs/java%E5%9F%BA%E7%A1%80/juc/</loc>
   </url><url>
     <loc>http://example.org/docs/java%E5%9F%BA%E7%A1%80/jvm/</loc>
   </url><url>
     <loc>http://example.org/docs/java%E5%9F%BA%E7%A1%80/lambda/</loc>
   </url><url>
+    <loc>http://example.org/docs/java%E5%9F%BA%E7%A1%80/skiplist/</loc>
+  </url><url>
+    <loc>http://example.org/docs/java%E5%9F%BA%E7%A1%80/volatile/</loc>
+  </url><url>
+    <loc>http://example.org/docs/java%E5%9F%BA%E7%A1%80/%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</loc>
+  </url><url>
     <loc>http://example.org/docs/java%E5%9F%BA%E7%A1%80/%E7%BA%BF%E7%A8%8B%E6%B1%A0/</loc>
   </url><url>
     <loc>http://example.org/docs/java%E5%9F%BA%E7%A1%80/%E9%9B%86%E5%90%88/</loc>
+  </url><url>
+    <loc>http://example.org/docs/linux/</loc>
+  </url><url>
+    <loc>http://example.org/docs/linux/nvim/</loc>
+  </url><url>
+    <loc>http://example.org/docs/linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E5%85%B6%E4%BB%96/%E5%85%B6%E4%BB%96/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E5%85%B6%E4%BB%96/%E6%9E%B6%E6%9E%84%E5%9F%BA%E7%A1%80/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E5%85%B6%E4%BB%96/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E5%85%B6%E4%BB%96/%E7%AE%97%E6%B3%95/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E5%85%B6%E4%BB%96/%E9%9B%85%E6%80%9D/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/gossip%E5%8D%8F%E8%AE%AE/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/nwr/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/paxos/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/zab%E5%8D%8F%E8%AE%AE/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BA%8B%E5%8A%A1/</loc>
   </url><url>
     <loc>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/sql-join/</loc>
   </url><url>
@@ -46,6 +92,12 @@
   </url><url>
     <loc>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E4%BA%8B%E5%8A%A1/</loc>
   </url><url>
+    <loc>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E9%94%81/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</loc>
+  </url><url>
+    <loc>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E5%8F%8C%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/</loc>
+  </url><url>
     <loc>http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E6%9E%B6%E6%9E%84/</loc>
   </url><url>
     <loc>http://example.org/docs/%E6%9E%B6%E6%9E%84/</loc>
@@ -61,7 +113,6 @@
     <loc>http://example.org/docs/%E7%AE%97%E6%B3%95/%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95/</loc>
   </url><url>
     <loc>http://example.org/menu/</loc>
-    <priority>0</priority>
   </url><url>
     <loc>http://example.org/categories/</loc>
   </url><url>

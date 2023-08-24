@@ -23,6 +23,20 @@
     
     <item>
       <title></title>
+      <link>http://example.org/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/slice/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/slice/</guid>
+      <description>切片底层储存数组,
+扩容机制
+底层数据会随着扩容二进行扩容,回溯时用到数据要特别注意.
+切片传参
+copy(copyData,srcData)
+https://leetcode.cn/problems/combination-sum-ii/submissions/</description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>http://example.org/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/%E5%8F%8D%E5%B0%84/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       

@@ -8,11 +8,38 @@
     <language>en</language><atom:link href="http://example.org/docs/java%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title></title>
+      <link>http://example.org/docs/java%E5%9F%BA%E7%A1%80/juc/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/java%E5%9F%BA%E7%A1%80/juc/</guid>
+      <description>juc并发编程
+主要掌握以下几个类的使用方法:
+CAS
+public class Cas { public static void main(String[] args) { // 无法控制并发 AtomicInteger ai = new AtomicInteger(1); System.out.println(ai.compareAndSet(0, 2)); System.out.println(ai.compareAndSet(1, 2)); // Unsafe unsafe = Unsafe.getUnsafe(); } } ABA问题,, 1&amp;mdash; &amp;gt;2 &amp;mdash;&amp;mdash;&amp;gt;1 发生了改变, 但外部并不清楚这种改变
+public static void main(String[] args) { // 无法控制并发 AtomicInteger ai = new AtomicInteger(1); System.out.println(ai.compareAndSet(0, 2)); System.out.println(ai.compareAndSet(1, 2)); // Unsafe unsafe = Unsafe.getUnsafe(); AtomicStampedReference atomicStampedReference = new AtomicStampedReference(2,3); System.out.println(atomicStampedReference.compareAndSet(2, 2, 3, 1)); System.out.println(atomicStampedReference.compareAndSet(2, 3, 3, 1)); } Atomic 类</description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>http://example.org/docs/java%E5%9F%BA%E7%A1%80/jvm/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>http://example.org/docs/java%E5%9F%BA%E7%A1%80/jvm/</guid>
-      <description>TODO</description>
+      <description>类加载机制 # GC策略 # 对象优先分配在eden区
+大对象直接分配在老年代
+长期存活的对象分配在老年代
+进入survior 区 或者survior 每经历一次minor gc 年龄+1 累计年龄的对象数超过50% 默认年龄阈值15, cms默认6 取累计年龄和默认年龄的最小值 GC分类 # partial GC:
+Young GC (Minor GC), 只收集young gen代的GC Old GC ,只收集Old gen的GC MixedGC 手机young gen和old gen 的GC, 只有G1支持这种模式 Full GC:
+收集整个堆的数据,young gen、old gen、perm gen major gc 和full gc等价, 概念混乱,也有major gc和old gc等价的说法,
+引用类型 # 强引用(Strong Reference)
+弱引用(Weak Reference)
+不管当前内存空间足够与否，都会回收它的内存,比Soft Reference 拥有更短的生命周期
+软引用(Soft Reference)
+内存空间不足时,进行回收
+虚引用(Phantom Reference)
+虚引用并不会决定对象的生命周期。如果一个对象仅持有虚引用，那么它就和没有任何引用一样，在任何时候都可能被垃圾回收
+常量池 # 字符串常量池位于堆中
+运行时常量池位于方法区(元空间)</description>
     </item>
     
     <item>
@@ -28,11 +55,53 @@ List&amp;lt;String&amp;gt; carsFiltered = Optional.ofNullable(cars) .orElseGet(C
     
     <item>
       <title></title>
+      <link>http://example.org/docs/java%E5%9F%BA%E7%A1%80/skiplist/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/java%E5%9F%BA%E7%A1%80/skiplist/</guid>
+      <description>跳表</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/docs/java%E5%9F%BA%E7%A1%80/volatile/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/java%E5%9F%BA%E7%A1%80/volatile/</guid>
+      <description>volatile用来保证变量可见性</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/docs/java%E5%9F%BA%E7%A1%80/%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/java%E5%9F%BA%E7%A1%80/%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</guid>
+      <description>Integer # Integer == int 整型会自动装箱与拆箱,
+Integer m = 323; int n = 323; System.out.println(m == n); // true Interger == Integer 比较的时对象, -128-127 连接的是同一对象,其他的指向不同对象
+Integer m = 323; Integer n = 323; System.out.println(m == n); // false String # 不可以变对象final
+String 不可变性天生具备线程安全，可以在多个线程中安全地使用。
+如果一个 String 对象已经被创建过了，那么就会从 String Pool 中取得引用。只有 String 是不可变的，才可能使用 String Pool。
+JDK版本 是否有永久代，字符串常量池放在哪里？ 方法区逻辑上规范，由哪些实际的部分实现的？ jdk1.6及之前 有永久代，运行时常量池（包括字符串常量池），静态变量存放在永久代上 这个时期方法区在HotSpot中是由永久代来实现的，以至于这个时期说方法区就是指永久代 jdk1.7 有永久代，但已经逐步“去永久代”，字符串常量池、静态变量移除，保存在堆中； 这个时期方法区在HotSpot中由永久代（类型信息、字段、方法、常量）和堆（字符串常量池、静态变量）共同实现 jdk1.8及之后 取消永久代，类型信息、字段、方法、常量保存在本地内存的元空间，但字符串常量池、静态变量仍在堆中 这个时期方法区在HotSpot中由本地内存的元空间（类型信息、字段、方法、常量）和堆（字符串常量池、静态变量）共同实现 可变字符串:
+StringBuffer
+线程不安全
+StringBuilder</description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>http://example.org/docs/java%E5%9F%BA%E7%A1%80/%E7%BA%BF%E7%A8%8B%E6%B1%A0/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>http://example.org/docs/java%E5%9F%BA%E7%A1%80/%E7%BA%BF%E7%A8%8B%E6%B1%A0/</guid>
-      <description>TODO</description>
+      <description>TODO
+线程状态
+新建: new
+就绪: 等待cpu调度 (start方法), Thread.yield() 会让线程从运行状态转换为就绪状态
+运行 : running状态 ,Thread.sleep()不会释放线程,只是会释放cpu占用
+阻塞: 等待资源
+等待 : monitor.wait
+终止: stop</description>
     </item>
     
     <item>
@@ -41,7 +110,11 @@ List&amp;lt;String&amp;gt; carsFiltered = Optional.ofNullable(cars) .orElseGet(C
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>http://example.org/docs/java%E5%9F%BA%E7%A1%80/%E9%9B%86%E5%90%88/</guid>
-      <description>TODO</description>
+      <description> List # 默认大小为10
+扩容规则
+每次扩容 1.5倍 扩容后任然不够大小,直接使用最小的数据大小 大于最大容量,取最大容量 扩展点
+go slice扩容规则
+小于1024 ,扩容两倍 double容量不能容纳,直接使用预估的容量 大于1024 ,扩容1.25倍 </description>
     </item>
     
   </channel>

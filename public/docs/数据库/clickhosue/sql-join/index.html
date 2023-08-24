@@ -10,7 +10,7 @@ join # 所有的join 操作基本范式都是
 ​	join table3 on table1.xxx=table3.xxx
 ​	join table4 on table2.xxx=table4.xxx
 不允许先查询 再进行join,错误查询示例
-select * from table_a where age=12 (inner) join table_b on table_a.id =table_b.id left joni table_c on table a.id=table_c.id where table_a.name=&#39;xxxx&#34; (innser)join操作 # ​	内连接,去两个表on 交集
+select * from table_a where age=12 (inner) join table_b on table_a.id =table_b.id left joni table_c on table a.id=table_c.id where table_a.name=&#39;xxxx&#34; (inner)join操作 # ​	内连接,去两个表on 交集
 select * from table_a (inner) join table_b on table_a.id =table_b.id where table_a.name=&#39;&#39;xxxx&#34; ​
 Left join # 左边为空时,会导致不会查到任何数据
 左连接,取左表所有
@@ -24,7 +24,7 @@ join # 所有的join 操作基本范式都是
 ​	join table3 on table1.xxx=table3.xxx
 ​	join table4 on table2.xxx=table4.xxx
 不允许先查询 再进行join,错误查询示例
-select * from table_a where age=12 (inner) join table_b on table_a.id =table_b.id left joni table_c on table a.id=table_c.id where table_a.name=&#39;xxxx&#34; (innser)join操作 # ​	内连接,去两个表on 交集
+select * from table_a where age=12 (inner) join table_b on table_a.id =table_b.id left joni table_c on table a.id=table_c.id where table_a.name=&#39;xxxx&#34; (inner)join操作 # ​	内连接,去两个表on 交集
 select * from table_a (inner) join table_b on table_a.id =table_b.id where table_a.name=&#39;&#39;xxxx&#34; ​
 Left join # 左边为空时,会导致不会查到任何数据
 左连接,取左表所有
@@ -38,7 +38,7 @@ select * from table_a left join table_b on table_a." />
 <link rel="icon" href="/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/book.min.c58292d36b18b675680ab9baea2029204537b839ea72f258746ec0f32ce8d6c8.css" integrity="sha256-xYKS02sYtnVoCrm66iApIEU3uDnqcvJYdG7A8yzo1sg=" crossorigin="anonymous">
   <script defer src="/flexsearch.min.js"></script>
-  <script defer src="/en.search.min.8c4912e29523d66f8911a6d25dda355256e4831cf98a61759b785a7fd112b722.js" integrity="sha256-jEkS4pUj1m&#43;JEabSXdo1Ulbkgxz5imF1m3haf9EStyI=" crossorigin="anonymous"></script>
+  <script defer src="/en.search.min.5f826a12543ba6a5ab17c6b2d774177bd99cb98661f9f7bf5a9b2a3a4a496528.js" integrity="sha256-X4JqElQ7pqWrF8ay13QXe9mcuYZh&#43;fe/WpsqOkpJZSg=" crossorigin="anonymous"></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -116,6 +116,19 @@ https://github.com/alex-shpak/hugo-book
   
 
   
+    <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/slice/" class="">Slice</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
     <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/%E5%8F%8D%E5%B0%84/" class="">反射</a>
   
 
@@ -134,11 +147,24 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <span>java基础</span>
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/" class="">java基础</a>
   
 
           
   <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/juc/" class="">Juc</a>
+  
+
+        </li>
+      
     
       
         <li>
@@ -173,6 +199,45 @@ https://github.com/alex-shpak/hugo-book
   
 
   
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/skiplist/" class="">Skiplist</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/volatile/" class="">Volatile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="">基本数据类型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
     <a href="/docs/java%E5%9F%BA%E7%A1%80/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="">线程池</a>
   
 
@@ -187,6 +252,176 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="/docs/java%E5%9F%BA%E7%A1%80/%E9%9B%86%E5%90%88/" class="">集合</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>其他</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/c%E8%AF%AD%E8%A8%80/" class="">其他</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E5%85%B6%E4%BB%96/" class="">其他</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E6%9E%B6%E6%9E%84%E5%9F%BA%E7%A1%80/" class="">架构基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/" class="">疑难杂症</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>分布式</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/raft%E5%8D%8F%E8%AE%AE/" class="">分布式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/gossip%E5%8D%8F%E8%AE%AE/" class="">Gossip协议</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/paxos/" class="">Paxos</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/zab%E5%8D%8F%E8%AE%AE/" class="">Zab协议</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BA%8B%E5%8A%A1/" class="">事务</a>
   
 
         </li>
@@ -333,6 +568,19 @@ https://github.com/alex-shpak/hugo-book
   
 
   
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E7%B4%A2%E5%BC%95/" class="">索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
     <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/mvcc%E6%A8%A1%E5%9E%8B/" class="">Mvcc模型</a>
   
 
@@ -347,6 +595,19 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E4%BA%8B%E5%8A%A1/" class="">事务</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E9%94%81/" class="">锁</a>
   
 
         </li>
@@ -369,6 +630,32 @@ https://github.com/alex-shpak/hugo-book
 
           
   <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="">分布式锁</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E5%8F%8C%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/" class="">双写一致性</a>
+  
+
+        </li>
+      
     
       
         <li>
@@ -459,7 +746,51 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <span>架构</span>
+    <a href="/docs/linux/" class="">Linux</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/nvim/" class="">Nvim</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="">常用命令</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%9E%B6%E6%9E%84/" class="">架构</a>
   
 
           
@@ -537,7 +868,7 @@ https://github.com/alex-shpak/hugo-book
   <ul>
     <li><a href="#join">join</a>
       <ul>
-        <li><a href="#innserjoin操作">(innser)join操作</a></li>
+        <li><a href="#innerjoin操作">(inner)join操作</a></li>
         <li><a href="#left-join">Left join</a></li>
         <li><a href="#right-join">right join</a></li>
       </ul>
@@ -575,9 +906,9 @@ https://github.com/alex-shpak/hugo-book
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">where</span> table_a.name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;xxxx&#34; 
 </span></span></span></code></pre></div><ul>
 <li>
-<h3 id="innserjoin操作">
-  (innser)join操作
-  <a class="anchor" href="#innserjoin%e6%93%8d%e4%bd%9c">#</a>
+<h3 id="innerjoin操作">
+  (inner)join操作
+  <a class="anchor" href="#innerjoin%e6%93%8d%e4%bd%9c">#</a>
 </h3>
 </li>
 </ul>
@@ -694,7 +1025,7 @@ https://github.com/alex-shpak/hugo-book
   <ul>
     <li><a href="#join">join</a>
       <ul>
-        <li><a href="#innserjoin操作">(innser)join操作</a></li>
+        <li><a href="#innerjoin操作">(inner)join操作</a></li>
         <li><a href="#left-join">Left join</a></li>
         <li><a href="#right-join">right join</a></li>
       </ul>

@@ -5,16 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="redis 架构 # 持久化方式 # rdb: fork进程
 aof: 一个线程,
+redis基础数据结构
+string类型:SDS ,简单字符串, 获取字符串容量 需要时间o(1), 是安全的,不会造成缓存区溢出
+详细: https://www.cnblogs.com/xiaolincoding/p/15628854.html
 一致性hash: # 一致哈希 是一种特殊的哈希算法。在使用一致哈希算法后，哈希表槽位数（大小）的改变平均只需要对 K/n 个关键字重新映射，其中 K 是关键字的数量，n 是槽位数量。然而在传统的哈希表中，添加或删除一个槽位的几乎需要对所有关键字进行重新映射。
 多级缓存: # 缓存更新、缓存一致性问题
-key&mdash;key&mdash;&gt;value形式 还是key-value形式">
+主从复制原理 # 当启动一个 slave node 的时候，它会发送一个 PSYNC 命令给 master node。 如果这是 slave node 初次连接到 master node，那么会触发一次 full resynchronization 全量复制。此时 master 会启动一个后台线程，开始生成一份 RDB 快照文件。 同时还会将从客户端 client 新收到的所有写命令缓存在内存中。RDB 文件生成完毕后， master 会将这个 RDB 发送给 slave，slave 会先写入本地磁盘，然后再从本地磁盘加载到内存中。 接着 master 会将内存中缓存的写命令发送到 slave，slave 也会同步这些数据。 slave node 如果跟 master node 有网络故障，断开了连接，会自动重连，连接之后 master node 仅会复制给 slave 部分缺少的数据。">
 <meta name="theme-color" content="#FFFFFF">
 <meta name="color-scheme" content="light dark"><meta property="og:title" content="" />
 <meta property="og:description" content="redis 架构 # 持久化方式 # rdb: fork进程
 aof: 一个线程,
+redis基础数据结构
+string类型:SDS ,简单字符串, 获取字符串容量 需要时间o(1), 是安全的,不会造成缓存区溢出
+详细: https://www.cnblogs.com/xiaolincoding/p/15628854.html
 一致性hash: # 一致哈希 是一种特殊的哈希算法。在使用一致哈希算法后，哈希表槽位数（大小）的改变平均只需要对 K/n 个关键字重新映射，其中 K 是关键字的数量，n 是槽位数量。然而在传统的哈希表中，添加或删除一个槽位的几乎需要对所有关键字进行重新映射。
 多级缓存: # 缓存更新、缓存一致性问题
-key&mdash;key&mdash;&gt;value形式 还是key-value形式" />
+主从复制原理 # 当启动一个 slave node 的时候，它会发送一个 PSYNC 命令给 master node。 如果这是 slave node 初次连接到 master node，那么会触发一次 full resynchronization 全量复制。此时 master 会启动一个后台线程，开始生成一份 RDB 快照文件。 同时还会将从客户端 client 新收到的所有写命令缓存在内存中。RDB 文件生成完毕后， master 会将这个 RDB 发送给 slave，slave 会先写入本地磁盘，然后再从本地磁盘加载到内存中。 接着 master 会将内存中缓存的写命令发送到 slave，slave 也会同步这些数据。 slave node 如果跟 master node 有网络故障，断开了连接，会自动重连，连接之后 master node 仅会复制给 slave 部分缺少的数据。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://example.org/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E6%9E%B6%E6%9E%84/" /><meta property="article:section" content="docs" />
 
@@ -24,7 +30,7 @@ key&mdash;key&mdash;&gt;value形式 还是key-value形式" />
 <link rel="icon" href="/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/book.min.c58292d36b18b675680ab9baea2029204537b839ea72f258746ec0f32ce8d6c8.css" integrity="sha256-xYKS02sYtnVoCrm66iApIEU3uDnqcvJYdG7A8yzo1sg=" crossorigin="anonymous">
   <script defer src="/flexsearch.min.js"></script>
-  <script defer src="/en.search.min.8c4912e29523d66f8911a6d25dda355256e4831cf98a61759b785a7fd112b722.js" integrity="sha256-jEkS4pUj1m&#43;JEabSXdo1Ulbkgxz5imF1m3haf9EStyI=" crossorigin="anonymous"></script>
+  <script defer src="/en.search.min.5f826a12543ba6a5ab17c6b2d774177bd99cb98661f9f7bf5a9b2a3a4a496528.js" integrity="sha256-X4JqElQ7pqWrF8ay13QXe9mcuYZh&#43;fe/WpsqOkpJZSg=" crossorigin="anonymous"></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -102,6 +108,19 @@ https://github.com/alex-shpak/hugo-book
   
 
   
+    <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/slice/" class="">Slice</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
     <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/%E5%8F%8D%E5%B0%84/" class="">反射</a>
   
 
@@ -120,11 +139,24 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <span>java基础</span>
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/" class="">java基础</a>
   
 
           
   <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/juc/" class="">Juc</a>
+  
+
+        </li>
+      
     
       
         <li>
@@ -159,6 +191,45 @@ https://github.com/alex-shpak/hugo-book
   
 
   
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/skiplist/" class="">Skiplist</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/volatile/" class="">Volatile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="">基本数据类型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
     <a href="/docs/java%E5%9F%BA%E7%A1%80/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="">线程池</a>
   
 
@@ -173,6 +244,176 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="/docs/java%E5%9F%BA%E7%A1%80/%E9%9B%86%E5%90%88/" class="">集合</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>其他</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/c%E8%AF%AD%E8%A8%80/" class="">其他</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E5%85%B6%E4%BB%96/" class="">其他</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E6%9E%B6%E6%9E%84%E5%9F%BA%E7%A1%80/" class="">架构基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/" class="">疑难杂症</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>分布式</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/raft%E5%8D%8F%E8%AE%AE/" class="">分布式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/gossip%E5%8D%8F%E8%AE%AE/" class="">Gossip协议</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/paxos/" class="">Paxos</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/zab%E5%8D%8F%E8%AE%AE/" class="">Zab协议</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BA%8B%E5%8A%A1/" class="">事务</a>
   
 
         </li>
@@ -319,6 +560,19 @@ https://github.com/alex-shpak/hugo-book
   
 
   
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E7%B4%A2%E5%BC%95/" class="">索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
     <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/mvcc%E6%A8%A1%E5%9E%8B/" class="">Mvcc模型</a>
   
 
@@ -333,6 +587,19 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E4%BA%8B%E5%8A%A1/" class="">事务</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E9%94%81/" class="">锁</a>
   
 
         </li>
@@ -355,6 +622,32 @@ https://github.com/alex-shpak/hugo-book
 
           
   <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="">分布式锁</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E5%8F%8C%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/" class="">双写一致性</a>
+  
+
+        </li>
+      
     
       
         <li>
@@ -445,7 +738,51 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <span>架构</span>
+    <a href="/docs/linux/" class="">Linux</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/nvim/" class="">Nvim</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="">常用命令</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%9E%B6%E6%9E%84/" class="">架构</a>
   
 
           
@@ -524,6 +861,28 @@ https://github.com/alex-shpak/hugo-book
     <li><a href="#持久化方式">持久化方式</a></li>
     <li><a href="#一致性hash">一致性hash:</a></li>
   </ul>
+
+  <ul>
+    <li><a href="#集群扩容扩容分区">集群扩容,扩容分区</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#时间轮机制">时间轮机制</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#读数据">读数据</a></li>
+    <li><a href="#高可用">高可用</a></li>
+    <li><a href="#写数据">写数据</a></li>
+    <li><a href="#数据过期">数据过期</a></li>
+    <li><a href="#网络架构">网络架构</a></li>
+    <li><a href="#规划">规划</a></li>
+    <li><a href="#原文章链接--httpsmpweixinqqcomsv1ksiriurcsrx7fcmq2ntq">原文章链接  <a href="https://mp.weixin.qq.com/s/V1KSIrIURCsrX7fCmq2NtQ">https://mp.weixin.qq.com/s/V1KSIrIURCsrX7fCmq2NtQ</a></a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#gmp-模型">GMP 模型</a></li>
+  </ul>
 </nav>
 
 
@@ -539,13 +898,17 @@ https://github.com/alex-shpak/hugo-book
   redis 架构
   <a class="anchor" href="#redis-%e6%9e%b6%e6%9e%84">#</a>
 </h1>
-<p><img src="static/image-20220520122914366.png" alt="image-20220520122914366" /></p>
+<p><img src="/Users/wuguangkuo/hugo_project/ms/static/image-20220520122914366.png" alt="image-20220520122914366" /></p>
 <h2 id="持久化方式">
   持久化方式
   <a class="anchor" href="#%e6%8c%81%e4%b9%85%e5%8c%96%e6%96%b9%e5%bc%8f">#</a>
 </h2>
 <p>rdb: fork进程</p>
 <p>aof: 一个线程,</p>
+<p>redis基础数据结构</p>
+<p>string类型:SDS ,简单字符串, 获取字符串容量 需要时间o(1), 是安全的,不会造成缓存区溢出</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xiaolincoder/ImageHost4@main/redis/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-lastnew.png" alt="img" /></p>
+<p>详细: <a href="https://www.cnblogs.com/xiaolincoding/p/15628854.html">https://www.cnblogs.com/xiaolincoding/p/15628854.html</a></p>
 <h2 id="一致性hash">
   一致性hash:
   <a class="anchor" href="#%e4%b8%80%e8%87%b4%e6%80%a7hash">#</a>
@@ -556,7 +919,160 @@ https://github.com/alex-shpak/hugo-book
   <a class="anchor" href="#%e5%a4%9a%e7%ba%a7%e7%bc%93%e5%ad%98">#</a>
 </h1>
 <p>缓存更新、缓存一致性问题</p>
+<h1 id="主从复制原理">
+  主从复制原理
+  <a class="anchor" href="#%e4%b8%bb%e4%bb%8e%e5%a4%8d%e5%88%b6%e5%8e%9f%e7%90%86">#</a>
+</h1>
+<p>当启动一个 slave node 的时候，它会发送一个 PSYNC 命令给 master node。
+如果这是 slave node 初次连接到 master node，那么会触发一次 full resynchronization 全量复制。此时 master 会启动一个后台线程，开始生成一份 RDB 快照文件。
+同时还会将从客户端 client 新收到的所有写命令缓存在内存中。RDB 文件生成完毕后， master 会将这个 RDB 发送给 slave，slave 会先写入本地磁盘，然后再从本地磁盘加载到内存中。
+接着 master 会将内存中缓存的写命令发送到 slave，slave 也会同步这些数据。
+slave node 如果跟 master node 有网络故障，断开了连接，会自动重连，连接之后 master node 仅会复制给 slave 部分缺少的数据。</p>
+<h1 id="线上redis集群配置-可选项">
+  线上redis集群配置? (可选项)
+  <a class="anchor" href="#%e7%ba%bf%e4%b8%8aredis%e9%9b%86%e7%be%a4%e9%85%8d%e7%bd%ae-%e5%8f%af%e9%80%89%e9%a1%b9">#</a>
+</h1>
+<h1 id="redis-cluster集群特性">
+  redis-cluster集群特性
+  <a class="anchor" href="#redis-cluster%e9%9b%86%e7%be%a4%e7%89%b9%e6%80%a7">#</a>
+</h1>
+<p>无法使用0 号数据库</p>
+<h1 id="redis分区分片">
+  redis分区(分片)
+  <a class="anchor" href="#redis%e5%88%86%e5%8c%ba%e5%88%86%e7%89%87">#</a>
+</h1>
+<p>客户端路由</p>
+<p>proxy代理路有</p>
+<p>查询路由</p>
+<p>缺点: 不支持多个key,不能进行管道操作,不能使用redis事务,不能对集合求交集</p>
+<h2 id="集群扩容扩容分区">
+  集群扩容,扩容分区
+  <a class="anchor" href="#%e9%9b%86%e7%be%a4%e6%89%a9%e5%ae%b9%e6%89%a9%e5%ae%b9%e5%88%86%e5%8c%ba">#</a>
+</h2>
+<h1 id="缓存的几个注意事项">
+  缓存的几个注意事项
+  <a class="anchor" href="#%e7%bc%93%e5%ad%98%e7%9a%84%e5%87%a0%e4%b8%aa%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a1%b9">#</a>
+</h1>
+<p>缓存雪崩</p>
+<p>缓存穿透  : 数据都没有, 采用bloom-filter 过滤器, 多个hash函数</p>
+<p>缓存击穿</p>
+<p>缓存预热</p>
+<p>缓存降级</p>
+<p>热点key缓存问题(加锁):</p>
+<p>​		对缓存查询加锁，如果 KEY 不存在，就加锁，然后查 DB 入缓存，然后解锁；其他进程如果发现有锁就等待，然后等解锁后返回数据或者进入 DB 查询</p>
+<h1 id="缓存一执性问题">
+  缓存一执性问题
+  <a class="anchor" href="#%e7%bc%93%e5%ad%98%e4%b8%80%e6%89%a7%e6%80%a7%e9%97%ae%e9%a2%98">#</a>
+</h1>
+<h1 id="主从一致性问题">
+  主从一致性问题
+  <a class="anchor" href="#%e4%b8%bb%e4%bb%8e%e4%b8%80%e8%87%b4%e6%80%a7%e9%97%ae%e9%a2%98">#</a>
+</h1>
+<h1 id="scan命令游标查询">
+  scan命令(游标查询)
+  <a class="anchor" href="#scan%e5%91%bd%e4%bb%a4%e6%b8%b8%e6%a0%87%e6%9f%a5%e8%af%a2">#</a>
+</h1>
+<p><strong>假如 Redis 里面有 1 亿个 key，其中有 10w 个 key 是以某个固定的已知的前缀开头的，如果将它们全部找出来？</strong></p>
+<p>使用 keys 指令可以扫出指定模式的 key 列表。</p>
+<p>对方接着追问：如果这个 redis 正在给线上的业务提供服务，那使用 keys 指令会有什么问题？</p>
+<p>这个时候你要回答 redis 关键的一个特性：redis 的单线程的。keys 指令会导致线程阻塞一段时间，线上服务会停顿，直到指令执行完毕，服务才能恢复。这个时候可以使用 scan 指令，scan 指令可以无阻塞的提取出指定模式的 key 列表，但是会有一定的重复概率，在客户端做一次去重就可以了，但是整体所花费的时间会比直接用 keys 指令长。</p>
+<p>redis实现分布式锁</p>
+<p>redis 数据接口</p>
+<p>SDS:简单字符串,</p>
+<p>Set:</p>
+<p>Hash:</p>
+<h1 id="redis优化">
+  redis优化
+  <a class="anchor" href="#redis%e4%bc%98%e5%8c%96">#</a>
+</h1>
+<p>1、尽量不要使用慢查询语句</p>
+<p>2、 大key</p>
+<p>3、不要使用keys 语句, 改为scan</p>
+<p>4、 合理的数据结构, 比如redis 会对hash存储做压缩优化, 直接存储key 会导致数据占用更大的存储空间, 而hash 则可以利用redis内容的优化手段降低内存使用率</p>
+<p>5、 尽量关闭swap ,性能很差</p>
+<p>6、 使用pipline 来优化查询, 在集群模式下不生效</p>
+<p>7、开启内存碎片清理 ,自动内存碎片</p>
+<p>8、合理设置backlog的大小，应设置成在服务端最大能够承受qps的1-1.5倍左右。</p>
+<p>redis 分布式锁</p>
+<h2 id="时间轮机制">
+  时间轮机制
+  <a class="anchor" href="#%e6%97%b6%e9%97%b4%e8%bd%ae%e6%9c%ba%e5%88%b6">#</a>
+</h2>
+<p>定时任务轮训 ,可以考虑使用这个数据结构</p>
+<p>时间轮机制是一种高效的定时任务调度算法，通过使用循环数组和时间槽的方式，实现了简单、可扩展和高效的定时任务管理。</p>
+<h1 id="kafka-知识点">
+  kafka 知识点
+  <a class="anchor" href="#kafka-%e7%9f%a5%e8%af%86%e7%82%b9">#</a>
+</h1>
+<h2 id="读数据">
+  读数据
+  <a class="anchor" href="#%e8%af%bb%e6%95%b0%e6%8d%ae">#</a>
+</h2>
+<ol>
+<li>根据稀疏索引，快速定位到要消费的数据</li>
+<li>零拷贝机制 减少数据的拷贝 减少了应用程序与操作系统上下文切换</li>
+</ol>
+<p>![image-20230704110442310](/Users/wuguangkuo/Library/Application Support/typora-user-images/image-20230704110442310.png)</p>
+<h2 id="高可用">
+  高可用
+  <a class="anchor" href="#%e9%ab%98%e5%8f%af%e7%94%a8">#</a>
+</h2>
+<p>在kafka里面分区是有副本的，注：<strong>0.8以前是没有副本机制的</strong>。创建主题时，可以指定分区，也可以指定副本个数。副本是有角色的：leader partition：1、写数据、读数据操作都是从leader partition去操作的。2、会维护一个ISR（in-sync- replica ）列表，但是会根据一定的规则删除ISR列表里面的值 生产者发送来一个消息，消息首先要写入到leader partition中 写完了以后，还要把消息写入到ISR列表里面的其它分区，写完后才算这个消息提交 follower partition：从leader partition同步数据。</p>
+<h2 id="写数据">
+  写数据
+  <a class="anchor" href="#%e5%86%99%e6%95%b0%e6%8d%ae">#</a>
+</h2>
+<ol>
+<li>把数据先写入到OS Cache</li>
+<li>写到磁盘上面是顺序写，性能很高</li>
+</ol>
+<h2 id="数据过期">
+  数据过期
+  <a class="anchor" href="#%e6%95%b0%e6%8d%ae%e8%bf%87%e6%9c%9f">#</a>
+</h2>
+<ol>
+<li>按照日志时间进行过期</li>
+<li>按照容量</li>
+</ol>
+<h2 id="网络架构">
+  网络架构
+  <a class="anchor" href="#%e7%bd%91%e7%bb%9c%e6%9e%b6%e6%9e%84">#</a>
+</h2>
+<h2 id="规划">
+  规划
+  <a class="anchor" href="#%e8%a7%84%e5%88%92">#</a>
+</h2>
+<p>一般情况下，我们评估机器的时候，是按照高峰期的4倍的去评估,遵循28原则</p>
+<ol>
+<li>物理机 or 虚拟机</li>
+<li>磁盘 ,SSD固态硬盘，还是需要普通的机械硬盘**SSD硬盘：性能比较好，但是价格贵 SAS盘：某方面性能不是很好，但是比较便宜。SSD硬盘性能比较好，指的是它随机读写的性能比较好。适合MySQL这样集群。**但是其实他的顺序写的性能跟SAS盘差不多。kafka的理解：就是用的顺序写。所以我们就用普通的【<code>机械硬盘</code>】就可以了。</li>
+</ol>
+<h2 id="原文章链接--httpsmpweixinqqcomsv1ksiriurcsrx7fcmq2ntq">
+  原文章链接  <a href="https://mp.weixin.qq.com/s/V1KSIrIURCsrX7fCmq2NtQ">https://mp.weixin.qq.com/s/V1KSIrIURCsrX7fCmq2NtQ</a>
+  <a class="anchor" href="#%e5%8e%9f%e6%96%87%e7%ab%a0%e9%93%be%e6%8e%a5--httpsmpweixinqqcomsv1ksiriurcsrx7fcmq2ntq">#</a>
+</h2>
+<h1 id="https-执行过程">
+  https 执行过程
+  <a class="anchor" href="#https-%e6%89%a7%e8%a1%8c%e8%bf%87%e7%a8%8b">#</a>
+</h1>
+<h1 id="java基础">
+  java基础
+  <a class="anchor" href="#java%e5%9f%ba%e7%a1%80">#</a>
+</h1>
+<p>锁:</p>
+<p>偏向锁 、 轻量级锁、重量级锁 、 自旋锁、</p>
+<h1 id="go面试">
+  GO面试
+  <a class="anchor" href="#go%e9%9d%a2%e8%af%95">#</a>
+</h1>
+<h2 id="gmp-模型">
+  GMP 模型
+  <a class="anchor" href="#gmp-%e6%a8%a1%e5%9e%8b">#</a>
+</h2>
 <p>key&mdash;key&mdash;&gt;value形式 还是key-value形式</p>
+<p>leecode 常用函数:</p>
+<p>sort.Slice</p>
+<p>sort.Ints</p>
 </article>
  
       
@@ -600,6 +1116,28 @@ https://github.com/alex-shpak/hugo-book
   <ul>
     <li><a href="#持久化方式">持久化方式</a></li>
     <li><a href="#一致性hash">一致性hash:</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#集群扩容扩容分区">集群扩容,扩容分区</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#时间轮机制">时间轮机制</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#读数据">读数据</a></li>
+    <li><a href="#高可用">高可用</a></li>
+    <li><a href="#写数据">写数据</a></li>
+    <li><a href="#数据过期">数据过期</a></li>
+    <li><a href="#网络架构">网络架构</a></li>
+    <li><a href="#规划">规划</a></li>
+    <li><a href="#原文章链接--httpsmpweixinqqcomsv1ksiriurcsrx7fcmq2ntq">原文章链接  <a href="https://mp.weixin.qq.com/s/V1KSIrIURCsrX7fCmq2NtQ">https://mp.weixin.qq.com/s/V1KSIrIURCsrX7fCmq2NtQ</a></a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#gmp-模型">GMP 模型</a></li>
   </ul>
 </nav>
 

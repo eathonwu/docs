@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>分布式 on My New Hugo Site</title>
+    <link>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/</link>
+    <description>Recent content in 分布式 on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language><atom:link href="http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>分布式</title>
+      <link>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/raft%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/raft%E5%8D%8F%E8%AE%AE/</guid>
+      <description>+++
+raft 算法是 Multi-Paxos 的一个变种，其简化了 Multi-Paxos 的思想，变得更容易被理解以及工程实现，实际项目中可以优先考虑 Raft 算法
++++
+1、拜占庭将军
+假设多位拜占庭将军中没有叛军，信使的信息可靠但有可能被暗杀的情况下，将军们如何达成是否要进攻的一致性决定？
+解决方案
+举例如下：假如现在一共有 3 个将军 A，B 和 C，每个将军都有一个随机时间的倒计时器，倒计时一结束，这个将军就把自己当成大将军候选人，然后派信使传递选举投票的信息给将军 B 和 C，如果将军 B 和 C 还没有把自己当作候选人（自己的倒计时还没有结束），并且没有把选举票投给其他人，它们就会把票投给将军 A，信使回到将军 A 时，将军 A 知道自己收到了足够的票数，成为大将军。在有了大将军之后，是否需要进攻就由大将军 A 决定，然后再去派信使通知另外两个将军，自己已经成为了大将军。如果一段时间还没收到将军 B 和 C 的回复（信使可能会被暗杀），那就再重派一个信使，直到收到回复。 2、SOP(共识算法) # 共识算法
+3 leader选举 # raft 使用心跳机制来触发 Leader 的选举。
+如果一台服务器能够收到来自 Leader 或者 Candidate 的有效信息，那么它会一直保持为 Follower 状态，并且刷新自己的 electionElapsed，重新计时。
+Leader 会向所有的 Follower 周期性发送心跳来保证自己的 Leader 地位。如果一个 Follower 在一个周期内没有收到心跳信息，就叫做选举超时，然后它就会认为此时没有可用的 Leader，并且开始进行一次选举以选出一个新的 Leader。
+为了开始新的选举，Follower 会自增自己的 term 号并且转换状态为 Candidate。然后他会向所有节点发起 RequestVoteRPC 请求， Candidate 的状态会持续到以下情况发生：</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/gossip%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/gossip%E5%8D%8F%E8%AE%AE/</guid>
+      <description>NoSQL 数据库 Redis 和 Apache Cassandra、服务网格解决方案 Consul 等知名项目都用到了 Gossip 协议，学习 Gossip 协议有助于我们搞清很多技术的底层原理。
+我们这里以 Redis Cluster 为例说明 Gossip 协议的实际应用。
+我们经常使用的分布式缓存 Redis 的官方集群解决方案（3.0 版本引入） Redis Cluster 就是基于 Gossip 协议来实现集群中各个节点数据的最终一致性。
+有了 Redis Cluster 之后，不需要专门部署 Sentinel 集群服务了。Redis Cluster 相当于是内置了 Sentinel 机制，Redis Cluster 内部的各个 Redis 节点通过 Gossip 协议互相探测健康状态，在故障时可以自动切换。
+著作权归Guide所有 原文链接：https://javaguide.cn/distributed-system/protocol/gossip-protocl.html#gossip-%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/nwr/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/nwr/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/paxos/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/paxos/</guid>
+      <description>Basic Paxos 中存在 3 个重要的角色：
+提议者（Proposer）：也可以叫做协调者（coordinator），提议者负责接受客户端的请求并发起提案。提案信息通常包括提案编号 (Proposal ID) 和提议的值 (Value)。 接受者（Acceptor）：也可以叫做投票员（voter），负责对提议者的提案进行投票，同时需要记住自己的投票历史； 学习者（Learner）：如果有超过半数接受者就某个提议达成了共识，那么学习者就需要接受这个提议，并就该提议作出运算，然后将运算结果返回给客户端。 为了减少实现该算法所需的节点数，一个节点可以身兼多个角色。并且，一个提案被选定需要被半数以上的 Acceptor 接受。这样的话，Basic Paxos 算法还具备容错性，在少于一半的节点出现故障时，集群仍能正常工作。
+Paxos 三种角色:Proposer，Acceptor，Learners # Proposer:
+只要 Proposer 发的提案被半数以上 Acceptor 接受，Proposer 就认为该提案里的 value 被选定 了。
+Acceptor: 只要 Acceptor 接受了某个提案，Acceptor 就认为该提案里的 value 被选定了。
+Learner: Acceptor 告诉 Learner 哪个 value 被选定，Learner 就认为那个 value 被选定。
+著作权归Guide所有 原文链接：https://javaguide.cn/distributed-system/protocol/paxos-algorithm.html#%E4%BB%8B%E7%BB%8D</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/zab%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/zab%E5%8D%8F%E8%AE%AE/</guid>
+      <description>ZAB( ZooKeeper Atomic Broadcast , ZooKeeper 原子消息广播协议)协议包括两种基本的模 式:崩溃恢复和消息广播 # **1.**崩溃恢复:主要就是 Leader 选举过程
+2.**数据同步:Leader 服务器与其他服务器进行数据同步
+**3.**消息广播:Leader 服务器将数据发送给其他服务器</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BA%8B%E5%8A%A1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/docs/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BA%8B%E5%8A%A1/</guid>
+      <description> TCC事务 # try
+confirm
+cancel
+XA # RM
+TM
+AP
+两阶段提交 # 三阶段提交 # 本地消息表 # 最大努力通知 # SAGA # AT(SEATA) # </description>
+    </item>
+    
+  </channel>
+</rss>

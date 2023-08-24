@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="华盛通2023-07-07 一面 # spring中的设计模式 # Aop机制 # 面向切面变成, 基于jdk 动态代理和cglib动态代理实现, 可以为方法指定对应的切面 ,从而动态扩展方法功能 , 比如为远程方法调用增加日志、trace.等
+jdk动态代理:运行时动态代理技术, 可以实现对接口的动态代理, 实现对象的invoactionhandler 来扩展原有类中方法的功能, 底层使用代理模式,重新生成一个代理类, 在调用方法之前或者之后 加载invocationhandler里面的扩展方法,只能对方法进行动态代理,
+cglib: 编译时字节码增强技术, 可以对字段、类、方法进行字节码增强
+spring -aop: 对jdk动态代理、cglib进行包装, 常用的注解, @Aspect 定义切面 , @PointCut 定义切人点 ,切入点即拦截的方法位置 , @Around 、@Before @After 定义Advice 通知, 比如加日志、监控、上报指标等
+kafka消息积压如何处理, 加消费者后rebalance如何解决分区重分配问题 # rebalance 无法避免
+redis节点挂掉如何处理 # ping消息获取节点信息:
+投票过程是集群中所有master参与,如果半数以上master节点与master节点通信超时(cluster-node-timeout),认为当前master节点挂掉。
+如果无对应的salve节点, 集群直接不可用
+slave 节点发小master节点挂掉后,开始raft 选举, offset 最大的节点优先选举, offset比较小的延迟选举
+扩展信息
+kafka ​	leader follower 挂掉后也是类似的原则, 由controller节点 , 从AR 副本 (ISR) 中选取一个副本作为leader 副本">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="" />
+<meta property="og:description" content="华盛通2023-07-07 一面 # spring中的设计模式 # Aop机制 # 面向切面变成, 基于jdk 动态代理和cglib动态代理实现, 可以为方法指定对应的切面 ,从而动态扩展方法功能 , 比如为远程方法调用增加日志、trace.等
+jdk动态代理:运行时动态代理技术, 可以实现对接口的动态代理, 实现对象的invoactionhandler 来扩展原有类中方法的功能, 底层使用代理模式,重新生成一个代理类, 在调用方法之前或者之后 加载invocationhandler里面的扩展方法,只能对方法进行动态代理,
+cglib: 编译时字节码增强技术, 可以对字段、类、方法进行字节码增强
+spring -aop: 对jdk动态代理、cglib进行包装, 常用的注解, @Aspect 定义切面 , @PointCut 定义切人点 ,切入点即拦截的方法位置 , @Around 、@Before @After 定义Advice 通知, 比如加日志、监控、上报指标等
+kafka消息积压如何处理, 加消费者后rebalance如何解决分区重分配问题 # rebalance 无法避免
+redis节点挂掉如何处理 # ping消息获取节点信息:
+投票过程是集群中所有master参与,如果半数以上master节点与master节点通信超时(cluster-node-timeout),认为当前master节点挂掉。
+如果无对应的salve节点, 集群直接不可用
+slave 节点发小master节点挂掉后,开始raft 选举, offset 最大的节点优先选举, offset比较小的延迟选举
+扩展信息
+kafka ​	leader follower 挂掉后也是类似的原则, 由controller节点 , 从AR 副本 (ISR) 中选取一个副本作为leader 副本" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://example.org/docs/%E5%85%B6%E4%BB%96/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/" /><meta property="article:section" content="docs" />
+
+
+<title>疑难杂症 | My New Hugo Site</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/book.min.c58292d36b18b675680ab9baea2029204537b839ea72f258746ec0f32ce8d6c8.css" integrity="sha256-xYKS02sYtnVoCrm66iApIEU3uDnqcvJYdG7A8yzo1sg=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.5f826a12543ba6a5ab17c6b2d774177bd99cb98661f9f7bf5a9b2a3a4a496528.js" integrity="sha256-X4JqElQ7pqWrF8ay13QXe9mcuYZh&#43;fe/WpsqOkpJZSg=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>My New Hugo Site</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>go语言基础</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/gmp%E6%A8%A1%E5%9E%8B/" class="">Gmp模型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/slice/" class="">Slice</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/%E5%8F%8D%E5%B0%84/" class="">反射</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/" class="">java基础</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/juc/" class="">Juc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/jvm/" class="">Jvm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/lambda/" class="">Lambda</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/skiplist/" class="">Skiplist</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/volatile/" class="">Volatile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="">基本数据类型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="">线程池</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/java%E5%9F%BA%E7%A1%80/%E9%9B%86%E5%90%88/" class="">集合</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>其他</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/c%E8%AF%AD%E8%A8%80/" class="">其他</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E5%85%B6%E4%BB%96/" class="">其他</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E6%9E%B6%E6%9E%84%E5%9F%BA%E7%A1%80/" class="">架构基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/" class="active">疑难杂症</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%85%B6%E4%BB%96/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>分布式</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/raft%E5%8D%8F%E8%AE%AE/" class="">分布式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/gossip%E5%8D%8F%E8%AE%AE/" class="">Gossip协议</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/paxos/" class="">Paxos</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/zab%E5%8D%8F%E8%AE%AE/" class="">Zab协议</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%BA%8B%E5%8A%A1/" class="">事务</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>数据库</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>elasticsearch</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/elasticsearch/%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87/" class="">数据分片</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/elasticsearch/%E8%B0%83%E4%BC%98/" class="">调优</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/" class="">clickhosue</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/sql-join/" class="">SQL Join</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/%E7%89%A9%E5%8C%96%E8%A7%86%E5%9B%BE/" class="">物化视图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/clickhosue/%E8%BF%90%E7%BB%B4%E7%9B%B8%E5%85%B3/" class="">运维相关</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>mysql</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E7%B4%A2%E5%BC%95/" class="">索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/mvcc%E6%A8%A1%E5%9E%8B/" class="">Mvcc模型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E4%BA%8B%E5%8A%A1/" class="">事务</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/%E9%94%81/" class="">锁</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>redis</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="">分布式锁</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E5%8F%8C%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/" class="">双写一致性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%95%B0%E6%8D%AE%E5%BA%93/redis/%E6%9E%B6%E6%9E%84/" class="">架构</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <span>算法</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="">动态规划</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E7%AE%97%E6%B3%95/%E5%9B%9E%E6%BA%AF/" class="">回溯</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E7%AE%97%E6%B3%95/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="">贪心算法</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/" class="">Linux</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/nvim/" class="">Nvim</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/linux/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="">常用命令</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%9E%B6%E6%9E%84/" class="">架构</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/%E6%9E%B6%E6%9E%84/%E5%BE%AE%E4%BF%A1%E6%9E%B6%E6%9E%84/" class="">微信架构</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>疑难杂症</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#spring中的设计模式">spring中的设计模式</a></li>
+    <li><a href="#aop机制">Aop机制</a></li>
+    <li><a href="#kafka消息积压如何处理-加消费者后rebalance如何解决分区重分配问题">kafka消息积压如何处理, 加消费者后rebalance如何解决分区重分配问题</a></li>
+    <li><a href="#redis节点挂掉如何处理">redis节点挂掉如何处理</a></li>
+    <li><a href="#线程池">线程池</a></li>
+    <li><a href="#arraylist-linklist插入数据时间复杂度空间复杂度">arraylist 、linklist插入数据时间复杂度、空间复杂度</a></li>
+    <li><a href="#clickhouse物化视图实现是否存在一致性问题">clickhouse物化视图实现,是否存在一致性问题</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#主分片">主分片</a></li>
+    <li><a href="#master节点选举">master节点选举</a></li>
+    <li><a href="#分片分配">分片分配</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#list删除元素">list删除元素</a></li>
+    <li><a href="#int--数组转化尽量用arraylist">int[]  数组转化尽量用arraylist</a></li>
+    <li><a href="#二叉搜索树与双向链表httpswwwnowcodercompractice947f6eb80d944a84850b0538bf0ec3a5tpid295tqid23253ruexamojqrutaformat-top101question-rankingsourceurl2fexam2foj">二叉搜索树与双向链表:https://www.nowcoder.com/practice/947f6eb80d944a84850b0538bf0ec3a5?tpId=295&amp;tqId=23253&amp;ru=/exam/oj&amp;qru=/ta/format-top101/question-ranking&amp;sourceUrl=%2Fexam%2Foj</a></li>
+    <li><a href="#是否是二叉搜索树">是否是二叉搜索树</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#elasticsearch-数据删除之后会发生什么">elasticsearch 数据删除之后会发生什么</a></li>
+    <li><a href="#是否会存在大合并">是否会存在大合并</a></li>
+    <li><a href="#es-数据查询变慢问题排查-">es 数据查询变慢问题排查 :</a></li>
+    <li><a href="#2023-07-11-国泰产险-一面">2023-07-11 国泰产险-一面</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#ribbon负载均衡">ribbon负载均衡</a></li>
+    <li><a href="#限流">限流</a></li>
+    <li><a href="#tcc事务机制-事务悬挂问题">TCC事务机制 ,事务悬挂问题</a></li>
+    <li><a href="#范型">范型</a></li>
+    <li><a href="#elasticsearch-有多少种查询方式">elasticsearch 有多少种查询方式</a></li>
+    <li><a href="#redis-list用途">redis list用途</a></li>
+    <li><a href="#redis-重启如何恢复数据-rdbaof">redis 重启如何恢复数据 (rdb、aof)</a></li>
+    <li><a href="#redis-使用注意事项">redis 使用注意事项</a></li>
+    <li><a href="#kafka如何保证幂等性">kafka如何保证幂等性</a></li>
+    <li><a href="#创建线程的方式">创建线程的方式</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#feign-注解">feign 注解</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#young-gc--如何进行垃圾回收-频繁youngc-会有什么问题">young gc -如何进行垃圾回收 ,频繁youngc 会有什么问题</a></li>
+    <li><a href="#kafka-消息堆积-如何解决">kafka 消息堆积 ,如何解决</a></li>
+    <li><a href="#reetranlock-synchronized-除了实现方式还有甚么区别">reetranlock 、synchronized 除了实现方式还有甚么区别</a></li>
+    <li><a href="#主动缓存里面的key是什么">主动缓存里面的key是什么</a></li>
+    <li><a href="#大key存储问题">大key存储问题</a></li>
+    <li><a href="#线程池停止的方式">线程池停止的方式</a></li>
+    <li><a href="#redis-集群模式如何感知节点变化">redis 集群模式如何感知节点变化</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#redis-集群如何实现mget">redis 集群如何实现mget</a></li>
+    <li><a href="#二级缓存如何实现">二级缓存如何实现</a></li>
+    <li><a href="#什么时候需要自定义类加载器">什么时候需要自定义类加载器</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#数据库为什么推荐用自增id作为主键索引">数据库为什么推荐用自增id作为主键索引</a></li>
+    <li><a href="#身份证号码如何做索引频繁更新">身份证号码如何做索引、频繁更新</a></li>
+    <li><a href="#epoll-边缘触发和水平触发">epoll 边缘触发和水平触发</a></li>
+    <li><a href="#innodb的四大特性">innodb的四大特性</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#四次挥手过程">四次挥手过程</a></li>
+    <li><a href="#dns污染">dns污染</a></li>
+    <li><a href="#dns劫持">dns劫持</a></li>
+    <li><a href="#dns泄漏">dns泄漏</a></li>
+    <li><a href="#dns-解析过程-">dns 解析过程 :</a></li>
+    <li><a href="#backlog全链接队列---somaxconnection">backlog:全链接队列 ,  somaxconnection</a></li>
+    <li><a href="#增大-tcp-半连接队列和全连接队列的方式">增大 TCP 半连接队列和全连接队列的方式</a></li>
+    <li><a href="#502-错误排查">502 错误排查</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#索引的实现原理">索引的实现原理</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#数据库-groupby-如何进行优化">数据库 groupby 如何进行优化</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#系统调用是什么">系统调用是什么</a></li>
+    <li><a href="#证书如何签名如何保证安全">证书如何签名、如何保证安全</a></li>
+    <li><a href="#bionio区别-同步与异步的区别">BIO、NIO区别, 同步与异步的区别</a></li>
+    <li><a href="#如何避免死锁问题">如何避免死锁问题</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#消息写入redis--如何避免热key问题">消息写入redis , 如何避免热key问题</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#项目qps-tps-之类的需要考虑面试者对项目的熟悉程度">项目qps 、tps 之类的,需要考虑面试者对项目的熟悉程度</a></li>
+    <li><a href="#设计一个停车场收费系统">设计一个停车场收费系统</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="华盛通2023-07-07-一面">
+  华盛通2023-07-07 一面
+  <a class="anchor" href="#%e5%8d%8e%e7%9b%9b%e9%80%9a2023-07-07-%e4%b8%80%e9%9d%a2">#</a>
+</h1>
+<h2 id="spring中的设计模式">
+  spring中的设计模式
+  <a class="anchor" href="#spring%e4%b8%ad%e7%9a%84%e8%ae%be%e8%ae%a1%e6%a8%a1%e5%bc%8f">#</a>
+</h2>
+<h2 id="aop机制">
+  Aop机制
+  <a class="anchor" href="#aop%e6%9c%ba%e5%88%b6">#</a>
+</h2>
+<p>面向切面变成, 基于jdk 动态代理和cglib动态代理实现,  可以为方法指定对应的切面 ,从而动态扩展方法功能 , 比如为远程方法调用增加日志、trace.等</p>
+<p>jdk动态代理:运行时动态代理技术, 可以实现对接口的动态代理, 实现对象的invoactionhandler 来扩展原有类中方法的功能, 底层使用代理模式,重新生成一个代理类, 在调用方法之前或者之后 加载invocationhandler里面的扩展方法,只能对方法进行动态代理,</p>
+<p>cglib: 编译时字节码增强技术, 可以对字段、类、方法进行字节码增强</p>
+<p>spring -aop: 对jdk动态代理、cglib进行包装, 常用的注解, @Aspect 定义切面 , @PointCut 定义切人点 ,切入点即拦截的方法位置 ,  @Around 、@Before @After 定义Advice 通知, 比如加日志、监控、上报指标等</p>
+<h2 id="kafka消息积压如何处理-加消费者后rebalance如何解决分区重分配问题">
+  kafka消息积压如何处理, 加消费者后rebalance如何解决分区重分配问题
+  <a class="anchor" href="#kafka%e6%b6%88%e6%81%af%e7%a7%af%e5%8e%8b%e5%a6%82%e4%bd%95%e5%a4%84%e7%90%86-%e5%8a%a0%e6%b6%88%e8%b4%b9%e8%80%85%e5%90%8erebalance%e5%a6%82%e4%bd%95%e8%a7%a3%e5%86%b3%e5%88%86%e5%8c%ba%e9%87%8d%e5%88%86%e9%85%8d%e9%97%ae%e9%a2%98">#</a>
+</h2>
+<p>rebalance 无法避免</p>
+<h2 id="redis节点挂掉如何处理">
+  redis节点挂掉如何处理
+  <a class="anchor" href="#redis%e8%8a%82%e7%82%b9%e6%8c%82%e6%8e%89%e5%a6%82%e4%bd%95%e5%a4%84%e7%90%86">#</a>
+</h2>
+<p>ping消息获取节点信息:</p>
+<p>投票过程是集群中所有master参与,如果半数以上master节点与master节点通信超时(cluster-node-timeout),认为当前master节点挂掉。</p>
+<p>如果无对应的salve节点, 集群直接不可用</p>
+<p>slave 节点发小master节点挂掉后,开始raft 选举, offset 最大的节点优先选举, offset比较小的延迟选举</p>
+<p>扩展信息</p>
+<ul>
+<li>kafka</li>
+</ul>
+<p>​				leader follower 挂掉后也是类似的原则, 由controller节点 , 从AR 副本 (ISR) 中选取一个副本作为leader 副本</p>
+<ul>
+<li>elasticesarch (bully算法)</li>
+</ul>
+<p>master节点选举: activeMaster列表是其它节点认为的当前集群的Master节点列表，如果activeMasters列表不为空，elasticsearch会优先从activeMasters列表中选举，也就是对应着流程图中的蓝色框，选举的算法是Bully算法，笔者在前文中详细介绍了Bully算法，Bully算法会涉及到优先级比较， 在activeMasters列表优先级比较的时候，如果节点有成为master的资格，那么优先级比较高，如果activeMaster列表有多个节点具有master资格，那么选择id最小的节点</p>
+<h2 id="线程池">
+  线程池
+  <a class="anchor" href="#%e7%ba%bf%e7%a8%8b%e6%b1%a0">#</a>
+</h2>
+<p>线程数量如何规划</p>
+<p>cpu类型的 N+1, IO密集型2N</p>
+<h2 id="arraylist-linklist插入数据时间复杂度空间复杂度">
+  arraylist 、linklist插入数据时间复杂度、空间复杂度
+  <a class="anchor" href="#arraylist-linklist%e6%8f%92%e5%85%a5%e6%95%b0%e6%8d%ae%e6%97%b6%e9%97%b4%e5%a4%8d%e6%9d%82%e5%ba%a6%e7%a9%ba%e9%97%b4%e5%a4%8d%e6%9d%82%e5%ba%a6">#</a>
+</h2>
+<h2 id="clickhouse物化视图实现是否存在一致性问题">
+  clickhouse物化视图实现,是否存在一致性问题
+  <a class="anchor" href="#clickhouse%e7%89%a9%e5%8c%96%e8%a7%86%e5%9b%be%e5%ae%9e%e7%8e%b0%e6%98%af%e5%90%a6%e5%ad%98%e5%9c%a8%e4%b8%80%e8%87%b4%e6%80%a7%e9%97%ae%e9%a2%98">#</a>
+</h2>
+<h1 id="elasticsearch">
+  elasticsearch
+  <a class="anchor" href="#elasticsearch">#</a>
+</h1>
+<h2 id="主分片">
+  主分片
+  <a class="anchor" href="#%e4%b8%bb%e5%88%86%e7%89%87">#</a>
+</h2>
+<p>​			主节点负责创建索引、删除索引、分配分片、追踪集群中的节点状态等工作, bully 、raft算法选取主节点</p>
+<h2 id="master节点选举">
+  master节点选举
+  <a class="anchor" href="#master%e8%8a%82%e7%82%b9%e9%80%89%e4%b8%be">#</a>
+</h2>
+<p>​		 	从候选节点中选择 id 最小的节点作为主节点, bully算法</p>
+<h2 id="分片分配">
+  分片分配
+  <a class="anchor" href="#%e5%88%86%e7%89%87%e5%88%86%e9%85%8d">#</a>
+</h2>
+<p>​		master 节点进行分片数据分配. 通过将in-sync列表的分片遍历各个decider，如果有任一deny发生，则拒绝本次分配。决策结束之后可能会有多个节点，取第一个节点上的分片作为主分片。 (类似kafka 副本故障转移技术)</p>
+<h1 id="java算法-常用函数">
+  java算法 常用函数
+  <a class="anchor" href="#java%e7%ae%97%e6%b3%95-%e5%b8%b8%e7%94%a8%e5%87%bd%e6%95%b0">#</a>
+</h1>
+<h2 id="list删除元素">
+  list删除元素
+  <a class="anchor" href="#list%e5%88%a0%e9%99%a4%e5%85%83%e7%b4%a0">#</a>
+</h2>
+<p>arrays.remove();</p>
+<h2 id="int--数组转化尽量用arraylist">
+  int[]  数组转化尽量用arraylist
+  <a class="anchor" href="#int--%e6%95%b0%e7%bb%84%e8%bd%ac%e5%8c%96%e5%b0%bd%e9%87%8f%e7%94%a8arraylist">#</a>
+</h2>
+<h2 id="二叉搜索树与双向链表httpswwwnowcodercompractice947f6eb80d944a84850b0538bf0ec3a5tpid295tqid23253ruexamojqrutaformat-top101question-rankingsourceurl2fexam2foj">
+  二叉搜索树与双向链表:https://www.nowcoder.com/practice/947f6eb80d944a84850b0538bf0ec3a5?tpId=295&amp;tqId=23253&amp;ru=/exam/oj&amp;qru=/ta/format-top101/question-ranking&amp;sourceUrl=%2Fexam%2Foj
+  <a class="anchor" href="#%e4%ba%8c%e5%8f%89%e6%90%9c%e7%b4%a2%e6%a0%91%e4%b8%8e%e5%8f%8c%e5%90%91%e9%93%be%e8%a1%a8httpswwwnowcodercompractice947f6eb80d944a84850b0538bf0ec3a5tpid295tqid23253ruexamojqrutaformat-top101question-rankingsourceurl2fexam2foj">#</a>
+</h2>
+<h2 id="是否是二叉搜索树">
+  是否是二叉搜索树
+  <a class="anchor" href="#%e6%98%af%e5%90%a6%e6%98%af%e4%ba%8c%e5%8f%89%e6%90%9c%e7%b4%a2%e6%a0%91">#</a>
+</h2>
+<p>Array.copyOf({原数组},数组长度);</p>
+<h1 id="2023-07-10-乐信集团--一面">
+  2023-07-10 乐信集团- 一面
+  <a class="anchor" href="#2023-07-10-%e4%b9%90%e4%bf%a1%e9%9b%86%e5%9b%a2--%e4%b8%80%e9%9d%a2">#</a>
+</h1>
+<h2 id="elasticsearch-数据删除之后会发生什么">
+  elasticsearch 数据删除之后会发生什么
+  <a class="anchor" href="#elasticsearch-%e6%95%b0%e6%8d%ae%e5%88%a0%e9%99%a4%e4%b9%8b%e5%90%8e%e4%bc%9a%e5%8f%91%e7%94%9f%e4%bb%80%e4%b9%88">#</a>
+</h2>
+<p>标记删除,还是会存在对应的数据, es内部维护线程进行段的合并。删除后可能导致性能不降反升, 可以调用es的merge 接口手动进行的段合并</p>
+<h2 id="是否会存在大合并">
+  是否会存在大合并
+  <a class="anchor" href="#%e6%98%af%e5%90%a6%e4%bc%9a%e5%ad%98%e5%9c%a8%e5%a4%a7%e5%90%88%e5%b9%b6">#</a>
+</h2>
+<h2 id="es-数据查询变慢问题排查-">
+  es 数据查询变慢问题排查 :
+  <a class="anchor" href="#es-%e6%95%b0%e6%8d%ae%e6%9f%a5%e8%af%a2%e5%8f%98%e6%85%a2%e9%97%ae%e9%a2%98%e6%8e%92%e6%9f%a5-">#</a>
+</h2>
+<p>删除数据,导致cpu飙升, 可以手动进行es段的合并</p>
+<h2 id="2023-07-11-国泰产险-一面">
+  2023-07-11 国泰产险-一面
+  <a class="anchor" href="#2023-07-11-%e5%9b%bd%e6%b3%b0%e4%ba%a7%e9%99%a9-%e4%b8%80%e9%9d%a2">#</a>
+</h2>
+<p>压测如何进行</p>
+<p>jmeter 还是自定义、</p>
+<h1 id="2023-07-11--华盛通-二面">
+  2023-07-11  华盛通 二面
+  <a class="anchor" href="#2023-07-11--%e5%8d%8e%e7%9b%9b%e9%80%9a-%e4%ba%8c%e9%9d%a2">#</a>
+</h1>
+<h1 id="2023-07-12-健康160一面">
+  2023-07-12 健康160一面
+  <a class="anchor" href="#2023-07-12-%e5%81%a5%e5%ba%b7160%e4%b8%80%e9%9d%a2">#</a>
+</h1>
+<h2 id="ribbon负载均衡">
+  ribbon负载均衡
+  <a class="anchor" href="#ribbon%e8%b4%9f%e8%bd%bd%e5%9d%87%e8%a1%a1">#</a>
+</h2>
+<h2 id="限流">
+  限流
+  <a class="anchor" href="#%e9%99%90%e6%b5%81">#</a>
+</h2>
+<p>​	sentinel限流</p>
+<p>​	Guava Rate limit :基于令牌桶算法</p>
+<p>本地限流: 每个节点分配一定的流量, 查询是判断是否流量是否控制范围内,若是, 正常执行, 否的话,拒绝, 每隔一段时间拉取对应的流量,</p>
+<p>分布式限流: 针对并发比较小的情况</p>
+<h2 id="tcc事务机制-事务悬挂问题">
+  TCC事务机制 ,事务悬挂问题
+  <a class="anchor" href="#tcc%e4%ba%8b%e5%8a%a1%e6%9c%ba%e5%88%b6-%e4%ba%8b%e5%8a%a1%e6%82%ac%e6%8c%82%e9%97%ae%e9%a2%98">#</a>
+</h2>
+<p>tcc 三个阶段:</p>
+<p>try</p>
+<p>confirm</p>
+<p>cancel</p>
+<p>需要业务保证,幂等性、空回滚、事务悬挂问题</p>
+<p>事务悬挂: 先try 、后cancel , try 后到达, 导致先进行了cancel ,try 资源被悬挂,解决方案 ,执行try的时候需要判断下是否先执行了cancel ,如果执行不用执行try了</p>
+<h2 id="范型">
+  范型
+  <a class="anchor" href="#%e8%8c%83%e5%9e%8b">#</a>
+</h2>
+<p>优势</p>
+<ul>
+<li>类型安全,可以在编译期进行类型擦出,及时发现类型安全问题</li>
+<li>使用范型,可以编写更加通用的代码,提高代码的灵活性</li>
+<li>使用时,可以避免频繁类型转换</li>
+</ul>
+<p>局限性:</p>
+<ul>
+<li>无法使用基本类型作为类型参数，例如List<!-- raw HTML omitted -->是不允许的，需要使用包装类List<!-- raw HTML omitted -->代替。</li>
+<li>无法创建具有泛型类型参数的数组，例如new T[]是不合法的，可以使用List<!-- raw HTML omitted -->代替。</li>
+</ul>
+<h2 id="elasticsearch-有多少种查询方式">
+  elasticsearch 有多少种查询方式
+  <a class="anchor" href="#elasticsearch-%e6%9c%89%e5%a4%9a%e5%b0%91%e7%a7%8d%e6%9f%a5%e8%af%a2%e6%96%b9%e5%bc%8f">#</a>
+</h2>
+<ul>
+<li>term查询（精准查询）</li>
+<li>math查询（分词匹配查询）</li>
+<li>fuzzy查询（模糊查询）</li>
+<li>wildcard(通配符查询)</li>
+<li>bool查询（布尔查询）</li>
+</ul>
+<p>分页查询</p>
+<ul>
+<li>from + size,分页限制1万,超过会报错</li>
+<li>search after 利用实时有游标来帮我们解决实时滚动的问题。第一次搜索时需要指定 sort，并且保证值是唯一的，可以通过加入 _id 保证唯一性。缺点: 可以实时高效的进行分页查询，但是它只能做下一页这样的查询场景，不能随机的指定页数查询</li>
+<li>scroll api   创建一个快照，有新的数据写入以后,无法被查到。每次查询后，输入上一次的 scroll_id。目前官方已经不推荐使用这个API了，使用<code>search_after</code>即可。</li>
+</ul>
+<h2 id="redis-list用途">
+  redis list用途
+  <a class="anchor" href="#redis-list%e7%94%a8%e9%80%94">#</a>
+</h2>
+<h2 id="redis-重启如何恢复数据-rdbaof">
+  redis 重启如何恢复数据 (rdb、aof)
+  <a class="anchor" href="#redis-%e9%87%8d%e5%90%af%e5%a6%82%e4%bd%95%e6%81%a2%e5%a4%8d%e6%95%b0%e6%8d%ae-rdbaof">#</a>
+</h2>
+<p>​	如果同时使用RDB和AOF两种持久化机制，那么在redis重启的时候，会使用AOF来重新构建数据，因为AOF中的数据更加完整</p>
+<h2 id="redis-使用注意事项">
+  redis 使用注意事项
+  <a class="anchor" href="#redis-%e4%bd%bf%e7%94%a8%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a1%b9">#</a>
+</h2>
+<h2 id="kafka如何保证幂等性">
+  kafka如何保证幂等性
+  <a class="anchor" href="#kafka%e5%a6%82%e4%bd%95%e4%bf%9d%e8%af%81%e5%b9%82%e7%ad%89%e6%80%a7">#</a>
+</h2>
+<h2 id="创建线程的方式">
+  创建线程的方式
+  <a class="anchor" href="#%e5%88%9b%e5%bb%ba%e7%ba%bf%e7%a8%8b%e7%9a%84%e6%96%b9%e5%bc%8f">#</a>
+</h2>
+<ul>
+<li>继承thread</li>
+<li>实现runnable接口</li>
+<li>实现callable接口 , new FutrueTask({Callable接口实现})</li>
+<li>通过线程池</li>
+</ul>
+<h1 id="2023-07-13--盛业一面">
+  2023-07-13  盛业一面
+  <a class="anchor" href="#2023-07-13--%e7%9b%9b%e4%b8%9a%e4%b8%80%e9%9d%a2">#</a>
+</h1>
+<p>500万数据多个数据组合查询,如何进行优化</p>
+<p>大表数据字段变更</p>
+<p>分布式锁 , 数据库实现分布式锁, 节点挂掉后, 锁会被释放掉吗?</p>
+<h1 id="2023-07-13--华润">
+  2023-07-13  华润
+  <a class="anchor" href="#2023-07-13--%e5%8d%8e%e6%b6%a6">#</a>
+</h1>
+<p>http 常见请求头</p>
+<p>跨域问题</p>
+<p>sha256</p>
+<p>final方法</p>
+<h2 id="feign-注解">
+  feign 注解
+  <a class="anchor" href="#feign-%e6%b3%a8%e8%a7%a3">#</a>
+</h2>
+<p>​	@FeignClient @RequestMapping</p>
+<p>docker compose 最佳实践</p>
+<p>注册中心设计:</p>
+<h1 id="2023-07-13--after-ship-一面挂">
+  2023-07-13  after-ship (一面挂)
+  <a class="anchor" href="#2023-07-13--after-ship-%e4%b8%80%e9%9d%a2%e6%8c%82">#</a>
+</h1>
+<p>场景类设计题目、堆 问题 , 感觉都答的差不多, 面试官说可以过, 最终挂了, 不知道啥原因</p>
+<h1 id="2023-07-14-华盛hr面">
+  2023-07-14 华盛hr面
+  <a class="anchor" href="#2023-07-14-%e5%8d%8e%e7%9b%9bhr%e9%9d%a2">#</a>
+</h1>
+<h1 id="2023-07-17-shein---一面挂-30分钟左右">
+  2023-07-17 shein - 一面(挂) 30分钟左右
+  <a class="anchor" href="#2023-07-17-shein---%e4%b8%80%e9%9d%a2%e6%8c%82-30%e5%88%86%e9%92%9f%e5%b7%a6%e5%8f%b3">#</a>
+</h1>
+<h2 id="young-gc--如何进行垃圾回收-频繁youngc-会有什么问题">
+  young gc -如何进行垃圾回收 ,频繁youngc 会有什么问题
+  <a class="anchor" href="#young-gc--%e5%a6%82%e4%bd%95%e8%bf%9b%e8%a1%8c%e5%9e%83%e5%9c%be%e5%9b%9e%e6%94%b6-%e9%a2%91%e7%b9%81youngc-%e4%bc%9a%e6%9c%89%e4%bb%80%e4%b9%88%e9%97%ae%e9%a2%98">#</a>
+</h2>
+<p>younggc 采用复制算法, 频繁younggc  cpu 会飙升</p>
+<h2 id="kafka-消息堆积-如何解决">
+  kafka 消息堆积 ,如何解决
+  <a class="anchor" href="#kafka-%e6%b6%88%e6%81%af%e5%a0%86%e7%a7%af-%e5%a6%82%e4%bd%95%e8%a7%a3%e5%86%b3">#</a>
+</h2>
+<p>调整消费者拉取数据量大小</p>
+<p>调整提交时间间隔</p>
+<p>消息异步化处理(提升消费速度,避免积压)</p>
+<h2 id="reetranlock-synchronized-除了实现方式还有甚么区别">
+  reetranlock 、synchronized 除了实现方式还有甚么区别
+  <a class="anchor" href="#reetranlock-synchronized-%e9%99%a4%e4%ba%86%e5%ae%9e%e7%8e%b0%e6%96%b9%e5%bc%8f%e8%bf%98%e6%9c%89%e7%94%9a%e4%b9%88%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<p>锁区别, 公平锁、 非公平锁</p>
+<p>是否可中断 ,  不可中断、可中断</p>
+<p>手动加锁、释放  ,reentrantlock 需要在finally 里面手动释放锁, 否则会导致锁一致得不到释</p>
+<p>condition 、wait 、notifyALL 区别</p>
+<h2 id="主动缓存里面的key是什么">
+  主动缓存里面的key是什么
+  <a class="anchor" href="#%e4%b8%bb%e5%8a%a8%e7%bc%93%e5%ad%98%e9%87%8c%e9%9d%a2%e7%9a%84key%e6%98%af%e4%bb%80%e4%b9%88">#</a>
+</h2>
+<p>接口 +  请求参数</p>
+<h2 id="大key存储问题">
+  大key存储问题
+  <a class="anchor" href="#%e5%a4%a7key%e5%ad%98%e5%82%a8%e9%97%ae%e9%a2%98">#</a>
+</h2>
+<h2 id="线程池停止的方式">
+  线程池停止的方式
+  <a class="anchor" href="#%e7%ba%bf%e7%a8%8b%e6%b1%a0%e5%81%9c%e6%ad%a2%e7%9a%84%e6%96%b9%e5%bc%8f">#</a>
+</h2>
+<ul>
+<li>shutdown</li>
+<li>shutdownnow</li>
+<li>awaitTermination, 请求等待一段时间后</li>
+</ul>
+<h2 id="redis-集群模式如何感知节点变化">
+  redis 集群模式如何感知节点变化
+  <a class="anchor" href="#redis-%e9%9b%86%e7%be%a4%e6%a8%a1%e5%bc%8f%e5%a6%82%e4%bd%95%e6%84%9f%e7%9f%a5%e8%8a%82%e7%82%b9%e5%8f%98%e5%8c%96">#</a>
+</h2>
+<ul>
+<li>lecture 开起定时更新网络结构配置 和 感知节点故障后 惰性更新配置 , 更新集群对应的不可用刷新间隔</li>
+<li>redission 可以自动感知集群拓扑变化</li>
+</ul>
+<h1 id="2023-07-17-唯品会一面-1个小时">
+  2023-07-17 唯品会一面 (1个小时)
+  <a class="anchor" href="#2023-07-17-%e5%94%af%e5%93%81%e4%bc%9a%e4%b8%80%e9%9d%a2-1%e4%b8%aa%e5%b0%8f%e6%97%b6">#</a>
+</h1>
+<h2 id="redis-集群如何实现mget">
+  redis 集群如何实现mget
+  <a class="anchor" href="#redis-%e9%9b%86%e7%be%a4%e5%a6%82%e4%bd%95%e5%ae%9e%e7%8e%b0mget">#</a>
+</h2>
+<h2 id="二级缓存如何实现">
+  二级缓存如何实现
+  <a class="anchor" href="#%e4%ba%8c%e7%ba%a7%e7%bc%93%e5%ad%98%e5%a6%82%e4%bd%95%e5%ae%9e%e7%8e%b0">#</a>
+</h2>
+<p>springcache 、caffine 、</p>
+<p>利用redis的发布订阅模式更新本地缓存数据</p>
+<p>caffeine-redis-sping-boot-starter</p>
+<p>订阅db里面的数据,同步更新redis缓存, redis 中利用pub/sub机制更新本地缓存</p>
+<h2 id="什么时候需要自定义类加载器">
+  什么时候需要自定义类加载器
+  <a class="anchor" href="#%e4%bb%80%e4%b9%88%e6%97%b6%e5%80%99%e9%9c%80%e8%a6%81%e8%87%aa%e5%ae%9a%e4%b9%89%e7%b1%bb%e5%8a%a0%e8%bd%bd%e5%99%a8">#</a>
+</h2>
+<p>tomcat 自定义类加载器, 可以隔离web服务下不同jar之间的版本, 每个web容器只加载相应版本的jar</p>
+<h1 id="2023-07-18-乐信二面30分钟">
+  2023-07-18 乐信二面(30分钟)
+  <a class="anchor" href="#2023-07-18-%e4%b9%90%e4%bf%a1%e4%ba%8c%e9%9d%a230%e5%88%86%e9%92%9f">#</a>
+</h1>
+<h2 id="数据库为什么推荐用自增id作为主键索引">
+  数据库为什么推荐用自增id作为主键索引
+  <a class="anchor" href="#%e6%95%b0%e6%8d%ae%e5%ba%93%e4%b8%ba%e4%bb%80%e4%b9%88%e6%8e%a8%e8%8d%90%e7%94%a8%e8%87%aa%e5%a2%9eid%e4%bd%9c%e4%b8%ba%e4%b8%bb%e9%94%ae%e7%b4%a2%e5%bc%95">#</a>
+</h2>
+<ul>
+<li>如果主键为自增 id 的话，mysql 在写满一个数据页的时候，直接申请另一个新数据页接着写就可以了。</li>
+<li>如果主键是非自增 id，为了确保索引有序，mysql 就需要将每次插入的数据都放到合适的位置上。</li>
+</ul>
+<h2 id="身份证号码如何做索引频繁更新">
+  身份证号码如何做索引、频繁更新
+  <a class="anchor" href="#%e8%ba%ab%e4%bb%bd%e8%af%81%e5%8f%b7%e7%a0%81%e5%a6%82%e4%bd%95%e5%81%9a%e7%b4%a2%e5%bc%95%e9%a2%91%e7%b9%81%e6%9b%b4%e6%96%b0">#</a>
+</h2>
+<p>识别身份证号的关键信息 、 hash取值后做索引、 冗余一个字段做更新</p>
+<h2 id="epoll-边缘触发和水平触发">
+  epoll 边缘触发和水平触发
+  <a class="anchor" href="#epoll-%e8%be%b9%e7%bc%98%e8%a7%a6%e5%8f%91%e5%92%8c%e6%b0%b4%e5%b9%b3%e8%a7%a6%e5%8f%91">#</a>
+</h2>
+<p>zset linklist 如何保证性能不退化成链表, 有个随机数,插入节点的时候按照概率, 越少层概率越小. 使得层数尽可能的均匀</p>
+<h2 id="innodb的四大特性">
+  innodb的四大特性
+  <a class="anchor" href="#innodb%e7%9a%84%e5%9b%9b%e5%a4%a7%e7%89%b9%e6%80%a7">#</a>
+</h2>
+<ul>
+<li>插入缓存</li>
+<li>二次写</li>
+<li>自适应哈希</li>
+<li>预读</li>
+</ul>
+<h1 id="2023-07-18-健康160二面">
+  2023-07-18 健康160二面
+  <a class="anchor" href="#2023-07-18-%e5%81%a5%e5%ba%b7160%e4%ba%8c%e9%9d%a2">#</a>
+</h1>
+<p>项目问题一个个问</p>
+<p>如何确保微信id数据问题</p>
+<h1 id="2023-07-19--盛业二面-30分钟-估计没戏-最后过了">
+  2023-07-19 -盛业二面 (30分钟 ,估计没戏-最后过了)
+  <a class="anchor" href="#2023-07-19--%e7%9b%9b%e4%b8%9a%e4%ba%8c%e9%9d%a2-30%e5%88%86%e9%92%9f-%e4%bc%b0%e8%ae%a1%e6%b2%a1%e6%88%8f-%e6%9c%80%e5%90%8e%e8%bf%87%e4%ba%86">#</a>
+</h1>
+<h1 id="2023-07-19-华润二面1个小时">
+  2023-07-19 华润二面(1个小时)
+  <a class="anchor" href="#2023-07-19-%e5%8d%8e%e6%b6%a6%e4%ba%8c%e9%9d%a21%e4%b8%aa%e5%b0%8f%e6%97%b6">#</a>
+</h1>
+<p>如何保证分布式事务的一致性,设计一种通用方案 ,最终消息一致性</p>
+<p>http各版本区别 , 最新到http3.0 web3.0, 基于udp</p>
+<h1 id="2023-07-20-富图一面">
+  2023-07-20 富图一面
+  <a class="anchor" href="#2023-07-20-%e5%af%8c%e5%9b%be%e4%b8%80%e9%9d%a2">#</a>
+</h1>
+<h2 id="四次挥手过程">
+  四次挥手过程
+  <a class="anchor" href="#%e5%9b%9b%e6%ac%a1%e6%8c%a5%e6%89%8b%e8%bf%87%e7%a8%8b">#</a>
+</h2>
+<p>最有有个timewait的过程,防止ack失败的情况出现</p>
+<h2 id="dns污染">
+  dns污染
+  <a class="anchor" href="#dns%e6%b1%a1%e6%9f%93">#</a>
+</h2>
+<h2 id="dns劫持">
+  dns劫持
+  <a class="anchor" href="#dns%e5%8a%ab%e6%8c%81">#</a>
+</h2>
+<h2 id="dns泄漏">
+  dns泄漏
+  <a class="anchor" href="#dns%e6%b3%84%e6%bc%8f">#</a>
+</h2>
+<h2 id="dns-解析过程-">
+  dns 解析过程 :
+  <a class="anchor" href="#dns-%e8%a7%a3%e6%9e%90%e8%bf%87%e7%a8%8b-">#</a>
+</h2>
+<ol>
+<li>主机先向本地域名服务器进行递归查询</li>
+<li>本地域名服务器采用迭代查询，向一个根域名服务器进行查询</li>
+<li>根域名服务器告诉本地域名服务器，下一次应该查询的顶级域名服务器的IP地址</li>
+<li>本地域名服务器向顶级域名服务器进行查询</li>
+<li>顶级域名服务器告诉本地域名服务器，下一步查询权限服务器的IP地址</li>
+<li>本地域名服务器向权限服务器进行查询</li>
+<li>权限服务器告诉本地域名服务器所查询的主机的IP地址</li>
+<li>本地域名服务器最后把查询结果告诉主机</li>
+</ol>
+<h2 id="backlog全链接队列---somaxconnection">
+  backlog:全链接队列 ,  somaxconnection
+  <a class="anchor" href="#backlog%e5%85%a8%e9%93%be%e6%8e%a5%e9%98%9f%e5%88%97---somaxconnection">#</a>
+</h2>
+<p>即全连接队列长度 = min(backlog, 内核参数 net.core.somaxconn)</p>
+<p>队列满了容易出现丢包的情况发生</p>
+<h2 id="增大-tcp-半连接队列和全连接队列的方式">
+  增大 TCP 半连接队列和全连接队列的方式
+  <a class="anchor" href="#%e5%a2%9e%e5%a4%a7-tcp-%e5%8d%8a%e8%bf%9e%e6%8e%a5%e9%98%9f%e5%88%97%e5%92%8c%e5%85%a8%e8%bf%9e%e6%8e%a5%e9%98%9f%e5%88%97%e7%9a%84%e6%96%b9%e5%bc%8f">#</a>
+</h2>
+<ul>
+<li>增大 TCP 半连接队列的方式是增大 /proc/sys/net/ipv4/tcp_max_syn_backlog；</li>
+<li>增大 TCP 全连接队列的方式是增大 listen() 函数中的 backlog；</li>
+</ul>
+<p>ss命令 可以查看全连接队列</p>
+<p>如何防止syn攻击</p>
+<ul>
+<li>增大半连接队列；</li>
+<li>开启 tcp_syncookies 功能</li>
+<li>减少 SYN+ACK 重传次数</li>
+</ul>
+<h2 id="502-错误排查">
+  502 错误排查
+  <a class="anchor" href="#502-%e9%94%99%e8%af%af%e6%8e%92%e6%9f%a5">#</a>
+</h2>
+<p>服务器作为网关, 请求上游得不到正常的返回</p>
+<h1 id="2023-07-21--健康160三面40分钟左右">
+  2023-07-21 -健康160三面(40分钟左右)
+  <a class="anchor" href="#2023-07-21--%e5%81%a5%e5%ba%b7160%e4%b8%89%e9%9d%a240%e5%88%86%e9%92%9f%e5%b7%a6%e5%8f%b3">#</a>
+</h1>
+<p>职业生涯规划, 整体状态不太好, 没有说明自己的远期规划是什么,后面需要特别准备下 , 尤其是ai 相关领域,</p>
+<h1 id="2023-07-21---阿里lazada-一面-1个小时">
+  2023-07-21 - 阿里lazada (一面-1个小时)
+  <a class="anchor" href="#2023-07-21---%e9%98%bf%e9%87%8clazada-%e4%b8%80%e9%9d%a2-1%e4%b8%aa%e5%b0%8f%e6%97%b6">#</a>
+</h1>
+<p>一道算法题, 求完全二叉树的最后一个节点 , 面试官比较nice ,体验很好 ,没怎么问八股文</p>
+<p>简单问了下threadlocal</p>
+<p>java、 go 之间的不同</p>
+<p>完全二叉树的最后一个节点.</p>
+<h1 id="2023-07-24-唯品会二面45分钟-挂">
+  2023-07-24 唯品会二面(45分钟-挂)
+  <a class="anchor" href="#2023-07-24-%e5%94%af%e5%93%81%e4%bc%9a%e4%ba%8c%e9%9d%a245%e5%88%86%e9%92%9f-%e6%8c%82">#</a>
+</h1>
+<h2 id="索引的实现原理">
+  索引的实现原理
+  <a class="anchor" href="#%e7%b4%a2%e5%bc%95%e7%9a%84%e5%ae%9e%e7%8e%b0%e5%8e%9f%e7%90%86">#</a>
+</h2>
+<ul>
+<li>
+<p>MyISAM,非聚簇索引</p>
+</li>
+<li>
+<p>innodb 聚簇索引,底层B+树</p>
+</li>
+</ul>
+<h1 id="2023-07-23-阿里lazada-二面一个小时---要挂面试官不按常理出牌-最后过了">
+  2023-07-23 阿里lazada 二面(一个小时&ndash; 要挂,面试官不按常理出牌-最后过了)
+  <a class="anchor" href="#2023-07-23-%e9%98%bf%e9%87%8clazada-%e4%ba%8c%e9%9d%a2%e4%b8%80%e4%b8%aa%e5%b0%8f%e6%97%b6---%e8%a6%81%e6%8c%82%e9%9d%a2%e8%af%95%e5%ae%98%e4%b8%8d%e6%8c%89%e5%b8%b8%e7%90%86%e5%87%ba%e7%89%8c-%e6%9c%80%e5%90%8e%e8%bf%87%e4%ba%86">#</a>
+</h1>
+<h2 id="数据库-groupby-如何进行优化">
+  数据库 groupby 如何进行优化
+  <a class="anchor" href="#%e6%95%b0%e6%8d%ae%e5%ba%93-groupby-%e5%a6%82%e4%bd%95%e8%bf%9b%e8%a1%8c%e4%bc%98%e5%8c%96">#</a>
+</h2>
+<p>原始groupby过程</p>
+<ul>
+<li>临时表(内存或者磁盘) , 走索引,本身自带去重操作,就不会使用临时表了</li>
+<li>orderby 排序,filesort(内存,磁盘)</li>
+</ul>
+<p>优化</p>
+<p>elasticsearch 有过哪些优化</p>
+<ul>
+<li>查询优化</li>
+<li>插入优化</li>
+<li>硬件配置优化</li>
+<li>数据字段优化, 合理设计分词,合理使用缓存</li>
+<li>服务端合理设置分片,refresh(默认1秒)、tranlog时间(默认5秒)</li>
+</ul>
+<h1 id="2023-07-25---富图">
+  2023-07-25 - 富图
+  <a class="anchor" href="#2023-07-25---%e5%af%8c%e5%9b%be">#</a>
+</h1>
+<h2 id="系统调用是什么">
+  系统调用是什么
+  <a class="anchor" href="#%e7%b3%bb%e7%bb%9f%e8%b0%83%e7%94%a8%e6%98%af%e4%bb%80%e4%b9%88">#</a>
+</h2>
+<h2 id="证书如何签名如何保证安全">
+  证书如何签名、如何保证安全
+  <a class="anchor" href="#%e8%af%81%e4%b9%a6%e5%a6%82%e4%bd%95%e7%ad%be%e5%90%8d%e5%a6%82%e4%bd%95%e4%bf%9d%e8%af%81%e5%ae%89%e5%85%a8">#</a>
+</h2>
+<p>ca机构办法证书会对证书信息进行签名, 签名后有私钥进行加密, 浏览器内置了主流ca的公钥,可以揭秘对应的签名,采用相同的签名算法看两次签名是否一致即可</p>
+<h2 id="bionio区别-同步与异步的区别">
+  BIO、NIO区别, 同步与异步的区别
+  <a class="anchor" href="#bionio%e5%8c%ba%e5%88%ab-%e5%90%8c%e6%ad%a5%e4%b8%8e%e5%bc%82%e6%ad%a5%e7%9a%84%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<h2 id="如何避免死锁问题">
+  如何避免死锁问题
+  <a class="anchor" href="#%e5%a6%82%e4%bd%95%e9%81%bf%e5%85%8d%e6%ad%bb%e9%94%81%e9%97%ae%e9%a2%98">#</a>
+</h2>
+<h1 id="2023-07-25---oppo-一面数据平台开发">
+  2023-07-25 - oppo 一面数据平台开发
+  <a class="anchor" href="#2023-07-25---oppo-%e4%b8%80%e9%9d%a2%e6%95%b0%e6%8d%ae%e5%b9%b3%e5%8f%b0%e5%bc%80%e5%8f%91">#</a>
+</h1>
+<p>没咋准备 ,估计凉了 , 凉就凉吧 ,无所谓了</p>
+<p>maven的几种依赖scope , compile 、test、runtime</p>
+<p>spark 任务</p>
+<p>jedis 常用的配置</p>
+<p>ast解析</p>
+<p>join优化</p>
+<p>clickhouse 常用的引擎</p>
+<p>clickhouse 建表语句,skiplist</p>
+<h1 id="2023-07-26-富图三面35分钟左右概率题没有分析出来要凉最后过了">
+  2023-07-26 富图三面(35分钟左右概率题没有分析出来,要凉最后过了)
+  <a class="anchor" href="#2023-07-26-%e5%af%8c%e5%9b%be%e4%b8%89%e9%9d%a235%e5%88%86%e9%92%9f%e5%b7%a6%e5%8f%b3%e6%a6%82%e7%8e%87%e9%a2%98%e6%b2%a1%e6%9c%89%e5%88%86%e6%9e%90%e5%87%ba%e6%9d%a5%e8%a6%81%e5%87%89%e6%9c%80%e5%90%8e%e8%bf%87%e4%ba%86">#</a>
+</h1>
+<p>概率题:  硬币空杯子概率,交换,因为交换之后的概率是2/3</p>
+<p>中文词检索:  trie树</p>
+<p>go cpu调度</p>
+<p>go 内存分配机制</p>
+<p>close-wait 如何处理</p>
+<p>进程挂掉后 os层面的连接会如何处理</p>
+<h1 id="2023-07-26-小红书一面1小时25分钟">
+  2023-07-26 小红书(一面1小时25分钟)
+  <a class="anchor" href="#2023-07-26-%e5%b0%8f%e7%ba%a2%e4%b9%a6%e4%b8%80%e9%9d%a21%e5%b0%8f%e6%97%b625%e5%88%86%e9%92%9f">#</a>
+</h1>
+<p>直接来个算法设计题(不怎么会,设计完我还是蒙圈的)</p>
+<p>interface SmartCache {
+String get(String key);
+}
+//不考虑set操作</p>
+<p>1.如果key不为热点，则从DB获取
+return getFromDB(key);
+// getFromDB()无需代码实现</p>
+<p>2.如果key为热点，则将DB数据缓存到本地的某个数据结构，优先从本地缓存读取</p>
+<p>定义最近N秒内访问次数超过M的key为热点key（M和N是固定的常数）</p>
+<h2 id="消息写入redis--如何避免热key问题">
+  消息写入redis , 如何避免热key问题
+  <a class="anchor" href="#%e6%b6%88%e6%81%af%e5%86%99%e5%85%a5redis--%e5%a6%82%e4%bd%95%e9%81%bf%e5%85%8d%e7%83%adkey%e9%97%ae%e9%a2%98">#</a>
+</h2>
+<p>客户端规定时间批量写入</p>
+<p>写入时给个随机数</p>
+<p>mq 错峰写入(会有延迟)</p>
+<h1 id="2023-07-27-阿里lazada-三面">
+  2023-07-27 阿里lazada 三面
+  <a class="anchor" href="#2023-07-27-%e9%98%bf%e9%87%8clazada-%e4%b8%89%e9%9d%a2">#</a>
+</h1>
+<p>入账出账是什么意思</p>
+<p>平台类型账号转账如何提高并发和实时性</p>
+<h1 id="2023-07-28---oppo二面画像">
+  2023-07-28 - oppo二面(画像)
+  <a class="anchor" href="#2023-07-28---oppo%e4%ba%8c%e9%9d%a2%e7%94%bb%e5%83%8f">#</a>
+</h1>
+<h1 id="2023-07-28---中国移动">
+  2023-07-28 - 中国移动
+  <a class="anchor" href="#2023-07-28---%e4%b8%ad%e5%9b%bd%e7%a7%bb%e5%8a%a8">#</a>
+</h1>
+<p>围着项目问</p>
+<h1 id="2023-07-30-沃尔玛一二面">
+  2023-07-30 沃尔玛(一二面)
+  <a class="anchor" href="#2023-07-30-%e6%b2%83%e5%b0%94%e7%8e%9b%e4%b8%80%e4%ba%8c%e9%9d%a2">#</a>
+</h1>
+<p>场景设计题 ,现有模型 ,然后根据模型进行对应的技术选型 ,</p>
+<p>考虑一些常见的问题 ,例如流量、安全 等</p>
+<h1 id="2023-07-31-小红书二面应该是凉了-过">
+  2023-07-31 小红书二面(应该是凉了-过)
+  <a class="anchor" href="#2023-07-31-%e5%b0%8f%e7%ba%a2%e4%b9%a6%e4%ba%8c%e9%9d%a2%e5%ba%94%e8%af%a5%e6%98%af%e5%87%89%e4%ba%86-%e8%bf%87">#</a>
+</h1>
+<p>给了一个算法 , 移动非0元素到最左侧 , 出了个乌龙,交换元素没搞对</p>
+<h1 id="2023-08-01-无觅-二面">
+  2023-08-01 无觅-二面
+  <a class="anchor" href="#2023-08-01-%e6%97%a0%e8%a7%85-%e4%ba%8c%e9%9d%a2">#</a>
+</h1>
+<p>资源有限的情况下,如何提升资源利用率</p>
+<h1 id="2023-08-01-oppo-三面">
+  2023-08-01 oppo-三面
+  <a class="anchor" href="#2023-08-01-oppo-%e4%b8%89%e9%9d%a2">#</a>
+</h1>
+<p>没问问题</p>
+<h1 id="2023-08-01--字节一面">
+  2023-08-01- 字节一面
+  <a class="anchor" href="#2023-08-01--%e5%ad%97%e8%8a%82%e4%b8%80%e9%9d%a2">#</a>
+</h1>
+<p>redis 热key问题</p>
+<h1 id="2023-08-02--平安一面">
+  2023-08-02  平安一面
+  <a class="anchor" href="#2023-08-02--%e5%b9%b3%e5%ae%89%e4%b8%80%e9%9d%a2">#</a>
+</h1>
+<p>项目面试</p>
+<p>设计</p>
+<p>交替打印问题</p>
+<p>有哪些还没有被发掘的点</p>
+<h1 id="2023-08-03-shopee一面">
+  2023-08-03 shopee一面
+  <a class="anchor" href="#2023-08-03-shopee%e4%b8%80%e9%9d%a2">#</a>
+</h1>
+<p>实现单链表的快速排序</p>
+<h1 id="2023-08-08-荣耀三面四面">
+  2023-08-08 荣耀三面四面
+  <a class="anchor" href="#2023-08-08-%e8%8d%a3%e8%80%80%e4%b8%89%e9%9d%a2%e5%9b%9b%e9%9d%a2">#</a>
+</h1>
+<p>DDD领域设计模式</p>
+<p>按照领域进行设计,尽可能少的减少业务影响对代码的干扰</p>
+<p>战术设计: 边界上下文、核心子域、通用子域、支撑子域,实体、值对象</p>
+<p>领域事件</p>
+<p>战术设计: 用户接口层、应用层、领域层、接口层</p>
+<p>洋葱模型、六边形架构(各种防腐层、VO、DTO、DO转换)</p>
+<h1 id="2023-08-09-小红书三面">
+  2023-08-09 小红书三面
+  <a class="anchor" href="#2023-08-09-%e5%b0%8f%e7%ba%a2%e4%b9%a6%e4%b8%89%e9%9d%a2">#</a>
+</h1>
+<p>架构变更hc调整,  到三面 没有后续了, 估计招到人了 ,不推进后续流程了</p>
+<h1 id="2023-08-09-字节45分钟">
+  2023-08-09 字节(45分钟)
+  <a class="anchor" href="#2023-08-09-%e5%ad%97%e8%8a%8245%e5%88%86%e9%92%9f">#</a>
+</h1>
+<p>数组最大容量</p>
+<p>推荐算法,如何保证推荐不重复</p>
+<h1 id="2023-08-14--字节三面">
+  2023-08-14 -字节三面
+  <a class="anchor" href="#2023-08-14--%e5%ad%97%e8%8a%82%e4%b8%89%e9%9d%a2">#</a>
+</h1>
+<h2 id="项目qps-tps-之类的需要考虑面试者对项目的熟悉程度">
+  项目qps 、tps 之类的,需要考虑面试者对项目的熟悉程度
+  <a class="anchor" href="#%e9%a1%b9%e7%9b%aeqps-tps-%e4%b9%8b%e7%b1%bb%e7%9a%84%e9%9c%80%e8%a6%81%e8%80%83%e8%99%91%e9%9d%a2%e8%af%95%e8%80%85%e5%af%b9%e9%a1%b9%e7%9b%ae%e7%9a%84%e7%86%9f%e6%82%89%e7%a8%8b%e5%ba%a6">#</a>
+</h2>
+<h2 id="设计一个停车场收费系统">
+  设计一个停车场收费系统
+  <a class="anchor" href="#%e8%ae%be%e8%ae%a1%e4%b8%80%e4%b8%aa%e5%81%9c%e8%bd%a6%e5%9c%ba%e6%94%b6%e8%b4%b9%e7%b3%bb%e7%bb%9f">#</a>
+</h2>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#spring中的设计模式">spring中的设计模式</a></li>
+    <li><a href="#aop机制">Aop机制</a></li>
+    <li><a href="#kafka消息积压如何处理-加消费者后rebalance如何解决分区重分配问题">kafka消息积压如何处理, 加消费者后rebalance如何解决分区重分配问题</a></li>
+    <li><a href="#redis节点挂掉如何处理">redis节点挂掉如何处理</a></li>
+    <li><a href="#线程池">线程池</a></li>
+    <li><a href="#arraylist-linklist插入数据时间复杂度空间复杂度">arraylist 、linklist插入数据时间复杂度、空间复杂度</a></li>
+    <li><a href="#clickhouse物化视图实现是否存在一致性问题">clickhouse物化视图实现,是否存在一致性问题</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#主分片">主分片</a></li>
+    <li><a href="#master节点选举">master节点选举</a></li>
+    <li><a href="#分片分配">分片分配</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#list删除元素">list删除元素</a></li>
+    <li><a href="#int--数组转化尽量用arraylist">int[]  数组转化尽量用arraylist</a></li>
+    <li><a href="#二叉搜索树与双向链表httpswwwnowcodercompractice947f6eb80d944a84850b0538bf0ec3a5tpid295tqid23253ruexamojqrutaformat-top101question-rankingsourceurl2fexam2foj">二叉搜索树与双向链表:https://www.nowcoder.com/practice/947f6eb80d944a84850b0538bf0ec3a5?tpId=295&amp;tqId=23253&amp;ru=/exam/oj&amp;qru=/ta/format-top101/question-ranking&amp;sourceUrl=%2Fexam%2Foj</a></li>
+    <li><a href="#是否是二叉搜索树">是否是二叉搜索树</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#elasticsearch-数据删除之后会发生什么">elasticsearch 数据删除之后会发生什么</a></li>
+    <li><a href="#是否会存在大合并">是否会存在大合并</a></li>
+    <li><a href="#es-数据查询变慢问题排查-">es 数据查询变慢问题排查 :</a></li>
+    <li><a href="#2023-07-11-国泰产险-一面">2023-07-11 国泰产险-一面</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#ribbon负载均衡">ribbon负载均衡</a></li>
+    <li><a href="#限流">限流</a></li>
+    <li><a href="#tcc事务机制-事务悬挂问题">TCC事务机制 ,事务悬挂问题</a></li>
+    <li><a href="#范型">范型</a></li>
+    <li><a href="#elasticsearch-有多少种查询方式">elasticsearch 有多少种查询方式</a></li>
+    <li><a href="#redis-list用途">redis list用途</a></li>
+    <li><a href="#redis-重启如何恢复数据-rdbaof">redis 重启如何恢复数据 (rdb、aof)</a></li>
+    <li><a href="#redis-使用注意事项">redis 使用注意事项</a></li>
+    <li><a href="#kafka如何保证幂等性">kafka如何保证幂等性</a></li>
+    <li><a href="#创建线程的方式">创建线程的方式</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#feign-注解">feign 注解</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#young-gc--如何进行垃圾回收-频繁youngc-会有什么问题">young gc -如何进行垃圾回收 ,频繁youngc 会有什么问题</a></li>
+    <li><a href="#kafka-消息堆积-如何解决">kafka 消息堆积 ,如何解决</a></li>
+    <li><a href="#reetranlock-synchronized-除了实现方式还有甚么区别">reetranlock 、synchronized 除了实现方式还有甚么区别</a></li>
+    <li><a href="#主动缓存里面的key是什么">主动缓存里面的key是什么</a></li>
+    <li><a href="#大key存储问题">大key存储问题</a></li>
+    <li><a href="#线程池停止的方式">线程池停止的方式</a></li>
+    <li><a href="#redis-集群模式如何感知节点变化">redis 集群模式如何感知节点变化</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#redis-集群如何实现mget">redis 集群如何实现mget</a></li>
+    <li><a href="#二级缓存如何实现">二级缓存如何实现</a></li>
+    <li><a href="#什么时候需要自定义类加载器">什么时候需要自定义类加载器</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#数据库为什么推荐用自增id作为主键索引">数据库为什么推荐用自增id作为主键索引</a></li>
+    <li><a href="#身份证号码如何做索引频繁更新">身份证号码如何做索引、频繁更新</a></li>
+    <li><a href="#epoll-边缘触发和水平触发">epoll 边缘触发和水平触发</a></li>
+    <li><a href="#innodb的四大特性">innodb的四大特性</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#四次挥手过程">四次挥手过程</a></li>
+    <li><a href="#dns污染">dns污染</a></li>
+    <li><a href="#dns劫持">dns劫持</a></li>
+    <li><a href="#dns泄漏">dns泄漏</a></li>
+    <li><a href="#dns-解析过程-">dns 解析过程 :</a></li>
+    <li><a href="#backlog全链接队列---somaxconnection">backlog:全链接队列 ,  somaxconnection</a></li>
+    <li><a href="#增大-tcp-半连接队列和全连接队列的方式">增大 TCP 半连接队列和全连接队列的方式</a></li>
+    <li><a href="#502-错误排查">502 错误排查</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#索引的实现原理">索引的实现原理</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#数据库-groupby-如何进行优化">数据库 groupby 如何进行优化</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#系统调用是什么">系统调用是什么</a></li>
+    <li><a href="#证书如何签名如何保证安全">证书如何签名、如何保证安全</a></li>
+    <li><a href="#bionio区别-同步与异步的区别">BIO、NIO区别, 同步与异步的区别</a></li>
+    <li><a href="#如何避免死锁问题">如何避免死锁问题</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#消息写入redis--如何避免热key问题">消息写入redis , 如何避免热key问题</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#项目qps-tps-之类的需要考虑面试者对项目的熟悉程度">项目qps 、tps 之类的,需要考虑面试者对项目的熟悉程度</a></li>
+    <li><a href="#设计一个停车场收费系统">设计一个停车场收费系统</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
